@@ -30,7 +30,7 @@ format:
     theme: 
        - custom.scss
     toc: true
-    code-fold: show
+    code-fold: true
     code-summary: "Show code"
     df-print: paged
 

@@ -1,59 +1,713 @@
 ---
-title: "Market Segmentation in Python"
-page-layout: article
+title: "Market Segmentation in Python: A Quarto Tutorial with Synthetic Data"
+subtitle: "Survey, Transaction, and CRM Segmentation with Pyodide-Friendly Python"
+author: "RWW and OpenAI"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: show
+    code-summary: "Show code"
+    df-print: paged
+    theme: cosmo
+jupyter: python3
+execute:
+  echo: true
+  warning: false
+  message: false
 ---
 
-## What this mini site contains
+## Overview
 
-This site packages a segmentation tutorial into a small Quarto website that is easy to publish on **GitHub Pages**.
+This tutorial is organized around three common segmentation settings:
 
-It includes:
+1. **Survey data** with attitudinal and preference variables.
+2. **Transaction data** with customer-level behavioral features such as recency, frequency, and spending.
+3. **CRM data** with mixed numeric and categorical account fields.
 
-- a full synthetic-data tutorial for **survey**, **transaction**, and **CRM** segmentation,
-- a deployment guide for **static GitHub Pages** publishing,
-- a small **Shiny for Python / Shinylive** pattern for browser-side interaction.
+The emphasis is on a workflow that is **browser-friendly** and relatively **Pyodide-compatible**:
 
-## Recommended publishing pattern
+- `numpy`
+- `pandas`
+- `matplotlib`
+- `scikit-learn`
 
-For most teaching and portfolio uses, the safest pattern is:
+That means avoiding packages that are excellent on the desktop but less convenient in browser runtimes.
 
-1. keep the main tutorial as a normal Quarto document,
-2. render the site to `docs/`,
-3. publish `docs/` through GitHub Pages,
-4. add a small browser-run interactive page separately when needed.
+## What this tutorial does
 
-This works well because Quarto websites can be rendered to `docs/`, which GitHub Pages can publish directly. Quarto’s GitHub Pages documentation explicitly supports publishing a site from the `docs` directory. citeturn580333search2
+For each data type, the tutorial will:
 
-## Site contents
+- generate a synthetic dataset with a known latent segment structure,
+- preprocess the data,
+- compare candidate numbers of clusters,
+- fit a segmentation model,
+- visualize the result,
+- produce segment-profiling tables.
 
-### Tutorial
+## Pyodide and Quarto notes
 
-The main tutorial lives in [tutorial.qmd](tutorial.qmd) and covers:
+This file is written as a normal Quarto `.qmd` using executable Python chunks. It can be rendered locally with Quarto and Jupyter. It is also designed to be **Pyodide-friendly** in the sense that it relies on packages that are commonly available in Pyodide-based browser execution environments.
 
-- synthetic survey segmentation,
-- synthetic transaction segmentation,
-- mixed-type CRM segmentation,
-- evaluation plots,
-- segment profiling tables.
+A few practical notes:
 
-### Deployment
+- Keep datasets modest in size for browser execution.
+- Prefer `matplotlib` over heavier plotting stacks.
+- Avoid file I/O dependencies.
+- Favor `scikit-learn` pipelines and transformers over niche clustering packages.
 
-The [deployment guide](deployment.qmd) explains the static-site workflow and the browser-side interactive pattern.
+---
 
-### Interactive demo
+## Setup
 
-The [interactive demo](shinylive_demo.qmd) is a small Quarto page meant as a starter template for a browser-first interactive clustering widget.
+```{python}
+#| label: setup
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
-## Local preview
+from sklearn.base import clone
+from sklearn.compose import ColumnTransformer
+from sklearn.cluster import KMeans, AgglomerativeClustering
+from sklearn.decomposition import PCA
+from sklearn.impute import SimpleImputer
+from sklearn.metrics import silhouette_score
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
-```bash
-quarto preview
+RNG = np.random.default_rng(42)
+pd.set_option("display.max_columns", 100)
 ```
 
-## Render for GitHub Pages
+```{python}
+#| label: helper-functions
 
-```bash
-quarto render
+def evaluate_kmeans_range(X, k_values, random_state=42, n_init=20):
+    rows = []
+    for k in k_values:
+        model = KMeans(n_clusters=k, random_state=random_state, n_init=n_init)
+        labels = model.fit_predict(X)
+        rows.append({
+            "k": k,
+            "inertia": model.inertia_,
+            "silhouette": silhouette_score(X, labels)
+        })
+    return pd.DataFrame(rows)
+
+
+def add_segment_order(summary_df, sort_col, ascending=True):
+    ordered = summary_df.sort_values(sort_col, ascending=ascending).copy()
+    ordered.insert(0, "segment_rank", range(1, len(ordered) + 1))
+    return ordered
+
+
+def plot_metric_curve(df_metrics, x_col="k", y_cols=("inertia", "silhouette"), title_prefix=""):
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+    axes[0].plot(df_metrics[x_col], df_metrics[y_cols[0]], marker="o")
+    axes[0].set_title(f"{title_prefix}Inertia by k")
+    axes[0].set_xlabel("k")
+    axes[0].set_ylabel("Inertia")
+
+    axes[1].plot(df_metrics[x_col], df_metrics[y_cols[1]], marker="o")
+    axes[1].set_title(f"{title_prefix}Silhouette by k")
+    axes[1].set_xlabel("k")
+    axes[1].set_ylabel("Silhouette")
+
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_pca_segments(X, labels, title="PCA view of segments"):
+    if hasattr(X, "toarray"):
+        X = X.toarray()
+    pca = PCA(n_components=2, random_state=42)
+    coords = pca.fit_transform(X)
+
+    plt.figure(figsize=(7, 5))
+    scatter = plt.scatter(coords[:, 0], coords[:, 1], c=labels)
+    plt.title(title)
+    plt.xlabel("PC1")
+    plt.ylabel("PC2")
+    plt.show()
+
+
+def top_categories_by_segment(df, segment_col, cat_cols):
+    pieces = []
+    for col in cat_cols:
+        mode_vals = (
+            df.groupby(segment_col)[col]
+            .agg(lambda s: s.mode().iloc[0] if not s.mode().empty else np.nan)
+            .rename(col)
+        )
+        pieces.append(mode_vals)
+    return pd.concat(pieces, axis=1)
 ```
 
-After rendering, commit the generated `docs/` directory and configure GitHub Pages to publish from `docs/` on the default branch, or use the included GitHub Actions workflow. GitHub Pages support for Quarto sites rendered to `docs/` is described in Quarto’s publishing documentation. citeturn580333search2turn580333search20
+---
+
+## 1. Survey segmentation
+
+### Framing
+
+Survey segmentation is common when you have attitudinal or preference variables such as:
+
+- price sensitivity,
+- quality emphasis,
+- environmental concern,
+- novelty seeking,
+- channel preference.
+
+In practice, survey segmentation often uses ordinal scales or one-hot encoded categories. To keep this tutorial Pyodide-friendly, we will build a synthetic survey with Likert-like numeric items and use **K-means** after standardization.
+
+### Generate synthetic survey data
+
+```{python}
+#| label: survey-generate
+n_per_segment = 120
+segments = np.repeat(["Value Seekers", "Quality Loyalists", "Trend Explorers"], n_per_segment)
+
+survey = pd.DataFrame({
+    "true_segment": segments,
+    "price_importance": np.concatenate([
+        RNG.normal(4.6, 0.4, n_per_segment),
+        RNG.normal(2.0, 0.5, n_per_segment),
+        RNG.normal(3.0, 0.6, n_per_segment),
+    ]),
+    "quality_importance": np.concatenate([
+        RNG.normal(2.3, 0.5, n_per_segment),
+        RNG.normal(4.7, 0.4, n_per_segment),
+        RNG.normal(3.8, 0.5, n_per_segment),
+    ]),
+    "innovation_interest": np.concatenate([
+        RNG.normal(2.4, 0.5, n_per_segment),
+        RNG.normal(3.0, 0.5, n_per_segment),
+        RNG.normal(4.8, 0.3, n_per_segment),
+    ]),
+    "eco_concern": np.concatenate([
+        RNG.normal(3.0, 0.7, n_per_segment),
+        RNG.normal(4.0, 0.5, n_per_segment),
+        RNG.normal(3.7, 0.6, n_per_segment),
+    ]),
+    "brand_loyalty": np.concatenate([
+        RNG.normal(2.2, 0.6, n_per_segment),
+        RNG.normal(4.6, 0.4, n_per_segment),
+        RNG.normal(3.1, 0.6, n_per_segment),
+    ]),
+    "social_media_engagement": np.concatenate([
+        RNG.normal(2.8, 0.7, n_per_segment),
+        RNG.normal(2.2, 0.6, n_per_segment),
+        RNG.normal(4.7, 0.4, n_per_segment),
+    ])
+})
+
+likert_cols = [
+    "price_importance", "quality_importance", "innovation_interest",
+    "eco_concern", "brand_loyalty", "social_media_engagement"
+]
+
+survey[likert_cols] = survey[likert_cols].clip(1, 5).round(0)
+survey.head()
+```
+
+### Inspect the synthetic survey
+
+```{python}
+#| label: survey-overview
+survey.groupby("true_segment")[likert_cols].mean().round(2)
+```
+
+### Standardize and choose the number of clusters
+
+```{python}
+#| label: survey-scale-eval
+survey_scaler = StandardScaler()
+X_survey = survey_scaler.fit_transform(survey[likert_cols])
+
+survey_metrics = evaluate_kmeans_range(X_survey, k_values=range(2, 7))
+survey_metrics
+```
+
+```{python}
+#| label: survey-metric-plot
+plot_metric_curve(survey_metrics, title_prefix="Survey: ")
+```
+
+### Fit the survey segmentation model
+
+```{python}
+#| label: survey-fit
+k_survey = 3
+survey_model = KMeans(n_clusters=k_survey, random_state=42, n_init=20)
+survey["segment"] = survey_model.fit_predict(X_survey)
+survey[["true_segment", "segment"] + likert_cols].head()
+```
+
+### Visualize the survey segments
+
+```{python}
+#| label: survey-pca
+plot_pca_segments(X_survey, survey["segment"], title="Survey segments projected onto two principal components")
+```
+
+### Segment profiles for the survey
+
+```{python}
+#| label: survey-profile
+survey_profile = survey.groupby("segment")[likert_cols].mean().round(2)
+survey_profile = add_segment_order(survey_profile, sort_col="price_importance", ascending=False)
+survey_profile
+```
+
+### Cross-tab against the known latent segments
+
+```{python}
+#| label: survey-crosstab
+pd.crosstab(survey["segment"], survey["true_segment"])
+```
+
+### Interpretation
+
+A typical interpretation here would be:
+
+- the segment with high `price_importance` and lower `brand_loyalty` is a **value-oriented** segment,
+- the segment with high `quality_importance` and `brand_loyalty` is a **premium/loyal** segment,
+- the segment with high `innovation_interest` and `social_media_engagement` is a **trend-seeking** segment.
+
+---
+
+## 2. Transaction segmentation
+
+### Framing
+
+Transaction segmentation usually starts with customer-level feature engineering rather than raw order lines. Common features include:
+
+- recency,
+- purchase frequency,
+- monetary value,
+- average order value,
+- discount reliance,
+- category breadth.
+
+This section generates synthetic **RFM-style** data plus two additional behavioral variables.
+
+### Generate synthetic transaction features
+
+```{python}
+#| label: txn-generate
+n_txn = 450
+latent = np.repeat(["Dormant Discount", "Steady Midvalue", "High Value Loyal"], n_txn // 3)
+
+transaction = pd.DataFrame({
+    "true_segment": latent,
+    "recency_days": np.concatenate([
+        RNG.normal(220, 45, n_txn // 3),
+        RNG.normal(55, 18, n_txn // 3),
+        RNG.normal(14, 6, n_txn // 3),
+    ]),
+    "purchase_frequency": np.concatenate([
+        RNG.normal(2.5, 1.0, n_txn // 3),
+        RNG.normal(10.0, 2.0, n_txn // 3),
+        RNG.normal(24.0, 4.0, n_txn // 3),
+    ]),
+    "monetary_value": np.concatenate([
+        RNG.normal(120, 35, n_txn // 3),
+        RNG.normal(650, 120, n_txn // 3),
+        RNG.normal(2300, 350, n_txn // 3),
+    ]),
+    "discount_share": np.concatenate([
+        RNG.normal(0.72, 0.10, n_txn // 3),
+        RNG.normal(0.28, 0.08, n_txn // 3),
+        RNG.normal(0.08, 0.04, n_txn // 3),
+    ]),
+    "category_breadth": np.concatenate([
+        RNG.normal(1.8, 0.7, n_txn // 3),
+        RNG.normal(3.6, 0.9, n_txn // 3),
+        RNG.normal(5.8, 1.1, n_txn // 3),
+    ]),
+    "avg_order_value": np.concatenate([
+        RNG.normal(48, 10, n_txn // 3),
+        RNG.normal(78, 14, n_txn // 3),
+        RNG.normal(160, 25, n_txn // 3),
+    ])
+})
+
+transaction["recency_days"] = transaction["recency_days"].clip(lower=1)
+transaction["purchase_frequency"] = transaction["purchase_frequency"].clip(lower=1)
+transaction["monetary_value"] = transaction["monetary_value"].clip(lower=10)
+transaction["discount_share"] = transaction["discount_share"].clip(0, 1)
+transaction["category_breadth"] = transaction["category_breadth"].clip(lower=1)
+transaction["avg_order_value"] = transaction["avg_order_value"].clip(lower=5)
+
+transaction.head()
+```
+
+### Create transformed modeling features
+
+```{python}
+#| label: txn-transform
+transaction["monetary_log"] = np.log1p(transaction["monetary_value"])
+transaction["avg_order_log"] = np.log1p(transaction["avg_order_value"])
+transaction["recency_log"] = np.log1p(transaction["recency_days"])
+
+transaction_features = [
+    "recency_log", "purchase_frequency", "monetary_log",
+    "discount_share", "category_breadth", "avg_order_log"
+]
+
+X_txn = StandardScaler().fit_transform(transaction[transaction_features])
+transaction[transaction_features].describe().round(2)
+```
+
+### Choose the number of clusters
+
+```{python}
+#| label: txn-eval
+transaction_metrics = evaluate_kmeans_range(X_txn, k_values=range(2, 7))
+transaction_metrics
+```
+
+```{python}
+#| label: txn-metric-plot
+plot_metric_curve(transaction_metrics, title_prefix="Transaction: ")
+```
+
+### Fit the transaction segmentation model
+
+```{python}
+#| label: txn-fit
+k_txn = 3
+transaction_model = KMeans(n_clusters=k_txn, random_state=42, n_init=20)
+transaction["segment"] = transaction_model.fit_predict(X_txn)
+transaction[["true_segment", "segment"] + transaction_features].head()
+```
+
+### Visualize the transaction segments
+
+```{python}
+#| label: txn-pca
+plot_pca_segments(X_txn, transaction["segment"], title="Transaction segments projected onto two principal components")
+```
+
+### Profile the transaction segments
+
+```{python}
+#| label: txn-profile
+transaction_profile_cols = [
+    "recency_days", "purchase_frequency", "monetary_value",
+    "discount_share", "category_breadth", "avg_order_value"
+]
+
+transaction_profile = (
+    transaction.groupby("segment")[transaction_profile_cols]
+    .mean()
+    .round(2)
+)
+transaction_profile = add_segment_order(transaction_profile, sort_col="monetary_value", ascending=False)
+transaction_profile
+```
+
+### Cross-tab against the latent transaction segments
+
+```{python}
+#| label: txn-crosstab
+pd.crosstab(transaction["segment"], transaction["true_segment"])
+```
+
+### Interpretation
+
+A typical business reading might be:
+
+- high-recency, low-frequency, high-discount customers are **at-risk bargain buyers**,
+- medium-value and medium-frequency customers are **core mainstream buyers**,
+- low-recency, high-frequency, high-spend customers are **premium loyalists**.
+
+---
+
+## 3. CRM segmentation with mixed data
+
+### Framing
+
+CRM and account-level segmentation often combines:
+
+- numeric variables such as tenure, spend, and support load,
+- categorical variables such as region, plan type, channel, and industry.
+
+A mixed-type workflow can be handled cleanly with a `ColumnTransformer` that standardizes numeric columns and one-hot encodes categorical columns, followed by clustering.
+
+### Generate synthetic CRM data
+
+```{python}
+#| label: crm-generate
+n_crm = 480
+crm_latent = np.repeat(["SMB Self-Serve", "Midmarket Partner", "Enterprise Direct"], n_crm // 3)
+
+crm = pd.DataFrame({
+    "true_segment": crm_latent,
+    "annual_spend": np.concatenate([
+        RNG.normal(900, 250, n_crm // 3),
+        RNG.normal(6500, 1200, n_crm // 3),
+        RNG.normal(28000, 5000, n_crm // 3),
+    ]),
+    "tenure_months": np.concatenate([
+        RNG.normal(6, 3, n_crm // 3),
+        RNG.normal(22, 8, n_crm // 3),
+        RNG.normal(40, 10, n_crm // 3),
+    ]),
+    "support_tickets": np.concatenate([
+        RNG.normal(1.5, 1.0, n_crm // 3),
+        RNG.normal(4.2, 1.8, n_crm // 3),
+        RNG.normal(9.0, 2.5, n_crm // 3),
+    ]),
+    "engagement_score": np.concatenate([
+        RNG.normal(42, 10, n_crm // 3),
+        RNG.normal(66, 9, n_crm // 3),
+        RNG.normal(82, 7, n_crm // 3),
+    ])
+})
+
+crm["annual_spend"] = crm["annual_spend"].clip(lower=100)
+crm["tenure_months"] = crm["tenure_months"].clip(lower=1)
+crm["support_tickets"] = crm["support_tickets"].clip(lower=0)
+crm["engagement_score"] = crm["engagement_score"].clip(0, 100)
+
+region_map = {
+    "SMB Self-Serve": ["West", "South", "Midwest"],
+    "Midmarket Partner": ["West", "Northeast", "Midwest"],
+    "Enterprise Direct": ["Northeast", "West", "South"]
+}
+plan_map = {
+    "SMB Self-Serve": ["Basic", "Standard"],
+    "Midmarket Partner": ["Standard", "Premium"],
+    "Enterprise Direct": ["Premium", "Enterprise"]
+}
+channel_map = {
+    "SMB Self-Serve": ["Web", "Product-Led"],
+    "Midmarket Partner": ["Partner", "Sales"],
+    "Enterprise Direct": ["Sales", "Field"]
+}
+industry_map = {
+    "SMB Self-Serve": ["Retail", "Services", "Education"],
+    "Midmarket Partner": ["Manufacturing", "Healthcare", "Services"],
+    "Enterprise Direct": ["Finance", "Technology", "Healthcare"]
+}
+
+crm["region"] = [RNG.choice(region_map[s]) for s in crm["true_segment"]]
+crm["plan_type"] = [RNG.choice(plan_map[s]) for s in crm["true_segment"]]
+crm["acquisition_channel"] = [RNG.choice(channel_map[s]) for s in crm["true_segment"]]
+crm["industry"] = [RNG.choice(industry_map[s]) for s in crm["true_segment"]]
+
+crm.head()
+```
+
+### Build the preprocessing pipeline
+
+```{python}
+#| label: crm-prep
+crm_num = ["annual_spend", "tenure_months", "support_tickets", "engagement_score"]
+crm_cat = ["region", "plan_type", "acquisition_channel", "industry"]
+
+crm_preprocessor = ColumnTransformer(
+    transformers=[
+        (
+            "num",
+            Pipeline([
+                ("imputer", SimpleImputer(strategy="median")),
+                ("scaler", StandardScaler())
+            ]),
+            crm_num,
+        ),
+        (
+            "cat",
+            Pipeline([
+                ("imputer", SimpleImputer(strategy="most_frequent")),
+                ("onehot", OneHotEncoder(handle_unknown="ignore"))
+            ]),
+            crm_cat,
+        )
+    ]
+)
+
+X_crm = crm_preprocessor.fit_transform(crm[crm_num + crm_cat])
+X_crm.shape
+```
+
+### Choose the number of clusters
+
+```{python}
+#| label: crm-eval
+crm_metrics = evaluate_kmeans_range(X_crm, k_values=range(2, 7))
+crm_metrics
+```
+
+```{python}
+#| label: crm-metric-plot
+plot_metric_curve(crm_metrics, title_prefix="CRM: ")
+```
+
+### Fit the CRM segmentation model
+
+```{python}
+#| label: crm-fit
+k_crm = 3
+crm_model = KMeans(n_clusters=k_crm, random_state=42, n_init=20)
+crm["segment"] = crm_model.fit_predict(X_crm)
+crm.head()
+```
+
+### Visualize the CRM segments
+
+```{python}
+#| label: crm-pca
+plot_pca_segments(X_crm, crm["segment"], title="CRM segments projected onto two principal components")
+```
+
+### Numeric CRM profile table
+
+```{python}
+#| label: crm-profile-numeric
+crm_numeric_profile = crm.groupby("segment")[crm_num].mean().round(2)
+crm_numeric_profile = add_segment_order(crm_numeric_profile, sort_col="annual_spend", ascending=False)
+crm_numeric_profile
+```
+
+### Categorical CRM profile table
+
+```{python}
+#| label: crm-profile-categorical
+crm_categorical_profile = top_categories_by_segment(crm, "segment", crm_cat)
+crm_categorical_profile
+```
+
+### Cross-tab against the latent CRM segments
+
+```{python}
+#| label: crm-crosstab
+pd.crosstab(crm["segment"], crm["true_segment"])
+```
+
+### Interpretation
+
+A typical practical reading might be:
+
+- one segment is **small self-serve accounts** with low tenure and low spend,
+- one segment is **midmarket partner-led accounts** with moderate spend and mixed support needs,
+- one segment is **enterprise direct accounts** with high spend, longer tenure, and higher engagement.
+
+---
+
+## 4. Compact comparison across the three settings
+
+```{python}
+#| label: final-comparison
+comparison = pd.DataFrame({
+    "dataset": ["Survey", "Transaction", "CRM"],
+    "chosen_k": [k_survey, k_txn, k_crm],
+    "silhouette_at_k": [
+        float(survey_metrics.loc[survey_metrics["k"] == k_survey, "silhouette"].iloc[0]),
+        float(transaction_metrics.loc[transaction_metrics["k"] == k_txn, "silhouette"].iloc[0]),
+        float(crm_metrics.loc[crm_metrics["k"] == k_crm, "silhouette"].iloc[0]),
+    ]
+}).round(3)
+comparison
+```
+
+## 5. Recommended adaptation patterns
+
+### For real survey data
+
+Replace the synthetic survey with your real table and:
+
+- map Likert items to numeric scores,
+- consider one-hot encoding for purely nominal variables,
+- compare `KMeans` with `AgglomerativeClustering`.
+
+### For real transaction data
+
+Build a customer-feature table first:
+
+- recency,
+- purchase frequency,
+- spend,
+- average order value,
+- category breadth,
+- discount share,
+- return rate,
+- tenure.
+
+Then:
+
+- log-transform highly skewed variables,
+- standardize,
+- test multiple values of `k`,
+- profile the segments in business language.
+
+### For real CRM data
+
+Use a mixed-data preprocessing pipeline:
+
+- impute missing values,
+- scale numerics,
+- one-hot encode categoricals,
+- cluster transformed features,
+- summarize both means and top categories by segment.
+
+---
+
+## 6. Optional: hierarchical clustering for survey data
+
+If you want a non-K-means alternative for the survey case, hierarchical clustering is often useful.
+
+```{python}
+#| label: survey-hierarchical
+survey_hier = AgglomerativeClustering(n_clusters=3)
+survey["segment_hier"] = survey_hier.fit_predict(X_survey)
+
+pd.crosstab(survey["segment_hier"], survey["true_segment"])
+```
+
+---
+
+## 7. What to watch for in production work
+
+A segmentation that looks good in a notebook can still fail in practice if:
+
+- the features are built over inconsistent time windows,
+- the segments are not actionable,
+- the cluster solution is unstable over time,
+- one-hot encoded rare categories dominate the geometry,
+- outliers are left untreated,
+- stakeholders cannot name or use the resulting segments.
+
+Good segmentation is not just a model-fitting exercise. It is a combination of:
+
+- sound feature engineering,
+- appropriate preprocessing,
+- sensible clustering,
+- careful profiling,
+- business interpretation.
+
+---
+
+## 8. Session info
+
+```{python}
+#| label: session-info
+import sys
+import sklearn
+
+print("Python:", sys.version.split()[0])
+print("pandas:", pd.__version__)
+print("numpy:", np.__version__)
+print("scikit-learn:", sklearn.__version__)
+```
+
+## 9. Rendering notes
+
+Render locally with Quarto using your usual workflow, for example:
+
+```bash
+quarto render market_segmentation_pyodide_tutorial.qmd
+```
+
+For browser-side Python deployment, keep the code modest and use a Pyodide-compatible publishing workflow.
