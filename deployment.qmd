@@ -1,0 +1,85 @@
+---
+title: "Deployment Guide"
+---
+
+## 1. Static GitHub Pages pattern
+
+Quarto supports publishing websites to GitHub Pages by rendering the site locally into a `docs/` directory and then configuring GitHub Pages to publish from that directory. citeturn580333search2
+
+That is the pattern used in this project:
+
+```yaml
+project:
+  type: website
+  output-dir: docs
+```
+
+This is a good default because it keeps the source files readable and the published output explicit.
+
+## 2. Why keep the main tutorial static?
+
+The main segmentation tutorial uses executable Python chunks but is primarily a **teaching document**, not a full application. Keeping it static makes GitHub Pages deployment simple and robust.
+
+Quarto websites share navigation and rendering options across pages through `_quarto.yml`, which makes this mini-project easy to grow into a larger teaching site. citeturn580333search8turn580333search17
+
+## 3. Browser-side interactive pattern
+
+When you want sliders or lightweight interaction without hosting a Python server, the cleanest approach is a **browser-side** pattern using Shinylive. The Shinylive Quarto extension is designed to embed Shiny for Python applications inside Quarto documents and run Python in the browser. citeturn231216view0
+
+This is useful for small interactive controls such as:
+
+- changing the number of clusters,
+- changing synthetic sample size,
+- switching feature pairs,
+- showing the effect of scaling.
+
+## 4. Server-backed versus browser-backed interactivity
+
+Quarto’s Shiny for Python pages can also run in the more traditional `server: shiny` mode, but that requires a Python-serving environment rather than plain static hosting. Quarto’s docs note that standard Shiny interactive documents are generated as an HTML page plus an `app.py` and are typically deployed to a server-capable environment. citeturn407962search2
+
+GitHub Pages is static hosting, so the browser-side pattern is the better fit there.
+
+## 5. Install the optional Shinylive extension
+
+From the project root:
+
+```bash
+quarto add quarto-ext/shinylive
+```
+
+Quarto stores extensions locally in an `_extensions` directory within the project, and the Quarto docs recommend checking that directory into version control for reproducibility. citeturn720128search6
+
+## 6. Preview locally
+
+For the static site:
+
+```bash
+quarto preview
+```
+
+For Shiny for Python documents more generally, Quarto supports preview from the editor or command line with `quarto preview`. citeturn407962search2
+
+## 7. Publish with GitHub Pages
+
+You have two practical options:
+
+### Option A: Commit `docs/`
+
+1. Run `quarto render`
+2. Commit the generated `docs/`
+3. In GitHub repository settings, publish from `docs/` on the default branch
+
+### Option B: Use GitHub Actions
+
+This project includes a starter workflow in `.github/workflows/publish.yml`.
+
+Quarto documents GitHub Actions as a supported CI path for publishing. citeturn580333search20
+
+## 8. Replace placeholders before publishing
+
+Edit these placeholders in `_quarto.yml`:
+
+- `YOUR-USERNAME`
+- `YOUR-REPO`
+
+The `site-url` matters for some website features, including feeds and canonical site behavior. Quarto notes that `site-url` should be set for generated feeds and website features that depend on the final URL. citeturn580333search21

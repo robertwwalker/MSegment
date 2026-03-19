@@ -1,0 +1,59 @@
+---
+title: "Market Segmentation in Python"
+page-layout: article
+---
+
+## What this mini site contains
+
+This site packages a segmentation tutorial into a small Quarto website that is easy to publish on **GitHub Pages**.
+
+It includes:
+
+- a full synthetic-data tutorial for **survey**, **transaction**, and **CRM** segmentation,
+- a deployment guide for **static GitHub Pages** publishing,
+- a small **Shiny for Python / Shinylive** pattern for browser-side interaction.
+
+## Recommended publishing pattern
+
+For most teaching and portfolio uses, the safest pattern is:
+
+1. keep the main tutorial as a normal Quarto document,
+2. render the site to `docs/`,
+3. publish `docs/` through GitHub Pages,
+4. add a small browser-run interactive page separately when needed.
+
+This works well because Quarto websites can be rendered to `docs/`, which GitHub Pages can publish directly. Quarto’s GitHub Pages documentation explicitly supports publishing a site from the `docs` directory. citeturn580333search2
+
+## Site contents
+
+### Tutorial
+
+The main tutorial lives in [tutorial.qmd](tutorial.qmd) and covers:
+
+- synthetic survey segmentation,
+- synthetic transaction segmentation,
+- mixed-type CRM segmentation,
+- evaluation plots,
+- segment profiling tables.
+
+### Deployment
+
+The [deployment guide](deployment.qmd) explains the static-site workflow and the browser-side interactive pattern.
+
+### Interactive demo
+
+The [interactive demo](shinylive_demo.qmd) is a small Quarto page meant as a starter template for a browser-first interactive clustering widget.
+
+## Local preview
+
+```bash
+quarto preview
+```
+
+## Render for GitHub Pages
+
+```bash
+quarto render
+```
+
+After rendering, commit the generated `docs/` directory and configure GitHub Pages to publish from `docs/` on the default branch, or use the included GitHub Actions workflow. GitHub Pages support for Quarto sites rendered to `docs/` is described in Quarto’s publishing documentation. citeturn580333search2turn580333search20

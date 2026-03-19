@@ -1,0 +1,42 @@
+---
+title: "Interactive Demo Pattern"
+format:
+  html:
+    page-layout: custom
+---
+
+## Purpose
+
+This page is a **starter pattern** for a browser-side interactive segmentation demo that you can adapt after adding the optional Shinylive extension.
+
+The goal is not to reproduce the full tutorial here, but to provide a small interactive page suitable for GitHub Pages.
+
+## Suggested setup command
+
+```bash
+quarto add quarto-ext/shinylive
+```
+
+## Minimal example structure
+
+Once the extension is installed, replace this placeholder section with your preferred Shinylive block from the extension’s current documentation and keep the app intentionally small.
+
+A good first interactive exercise is:
+
+- slider for sample size,
+- slider for number of clusters,
+- select box for data type,
+- reactive scatterplot of PCA coordinates.
+
+## Why this page is separate
+
+Keeping the interactive demo separate from the main tutorial helps in two ways:
+
+1. the tutorial remains easy to render and debug as a normal Quarto document;
+2. the browser-side demo can stay intentionally small so it performs well under Pyodide/WebAssembly constraints.
+
+The Shinylive extension is specifically meant for embedding Shiny for Python apps that run entirely in the browser. citeturn231216view0
+
+## Practical note
+
+Not every Python package works equally well in WebAssembly/browser runtimes, so smaller demos with mainstream scientific Python packages are the safest fit. The Shinylive extension documentation explicitly notes that not all Python packages can run in WebAssembly. citeturn231216view0

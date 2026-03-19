@@ -1,0 +1,38 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Market Segmentation in Python"
+  description: "A small Quarto site with a synthetic-data segmentation tutorial and a browser-first deployment pattern."
+  site-url: "https://YOUR-USERNAME.github.io/YOUR-REPO/"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: tutorial.qmd
+        text: Tutorial
+      - href: deployment.qmd
+        text: Deployment
+      - href: shinylive_demo.qmd
+        text: Interactive Demo
+    right:
+      - icon: github
+        href: "https://github.com/YOUR-USERNAME/YOUR-REPO"
+  page-footer:
+    left: "Built with Quarto for GitHub Pages."
+    right: "Replace placeholder URLs in `_quarto.yml` before publishing."
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-fold: show
+    code-summary: "Show code"
+    df-print: paged
+
+execute:
+  echo: true
+  warning: false
+  message: false
+  freeze: auto
