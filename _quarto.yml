@@ -1,11 +1,14 @@
 project:
   type: website
   output-dir: docs
+  resources:
+    - ".nojekyll"
+
 
 website:
   title: "Market Segmentation in Python"
   description: "A small Quarto site with a synthetic-data segmentation tutorial and a browser-first deployment pattern."
-  site-url: "https://YOUR-USERNAME.github.io/YOUR-REPO/"
+  site-url: "https://robertwwalker.github.io/MSegment/"
   navbar:
     left:
       - href: index.qmd
@@ -18,14 +21,14 @@ website:
         text: Interactive Demo
     right:
       - icon: github
-        href: "https://github.com/YOUR-USERNAME/YOUR-REPO"
+        href: "https://github.com/robertwwalker/MSegment"
   page-footer:
     left: "Built with Quarto for GitHub Pages."
-    right: "Replace placeholder URLs in `_quarto.yml` before publishing."
 
 format:
   html:
-    theme: cosmo
+    theme: 
+       - custom.scss
     toc: true
     code-fold: show
     code-summary: "Show code"
