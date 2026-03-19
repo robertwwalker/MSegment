@@ -2,19 +2,6 @@
 title: "Market Segmentation in Python: A Quarto Tutorial with Synthetic Data"
 subtitle: "Survey, Transaction, and CRM Segmentation with Pyodide-Friendly Python"
 author: "RWW and OpenAI"
-format:
-  html:
-    toc: true
-    toc-depth: 3
-    code-fold: show
-    code-summary: "Show code"
-    df-print: paged
-    theme: cosmo
-jupyter: python3
-execute:
-  echo: true
-  warning: false
-  message: false
 ---
 
 ## Overview
@@ -668,7 +655,7 @@ pd.crosstab(survey["segment_hier"], survey["true_segment"])
 
 ---
 
-## 7. What to watch for in production work
+## 7. Warnings
 
 A segmentation that looks good in a notebook can still fail in practice if:
 
@@ -702,12 +689,3 @@ print("numpy:", np.__version__)
 print("scikit-learn:", sklearn.__version__)
 ```
 
-## 9. Rendering notes
-
-Render locally with Quarto using your usual workflow, for example:
-
-```bash
-quarto render market_segmentation_pyodide_tutorial.qmd
-```
-
-For browser-side Python deployment, keep the code modest and use a Pyodide-compatible publishing workflow.
