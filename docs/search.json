@@ -1,0 +1,747 @@
+[
+  {
+    "objectID": "setup.html",
+    "href": "setup.html",
+    "title": "Setup",
+    "section": "",
+    "text": "All pages in this tutorial rely on the following standard packages. These are chosen for Pyodide compatibility.",
+    "crumbs": [
+      "Home",
+      "Setup"
+    ]
+  },
+  {
+    "objectID": "setup.html#imports",
+    "href": "setup.html#imports",
+    "title": "Setup",
+    "section": "",
+    "text": "All pages in this tutorial rely on the following standard packages. These are chosen for Pyodide compatibility.",
+    "crumbs": [
+      "Home",
+      "Setup"
+    ]
+  },
+  {
+    "objectID": "setup.html#helper-functions",
+    "href": "setup.html#helper-functions",
+    "title": "Setup",
+    "section": "Helper functions",
+    "text": "Helper functions\nFive shared utilities are used throughout the tutorial pages.\nevaluate_kmeans_range(X, k_values) — fits K-means for each value of k and returns a DataFrame of inertia and silhouette scores.\nadd_segment_order(summary_df, sort_col) — inserts a segment_rank column sorted by a chosen column, useful for profiling tables.\nplot_metric_curve(df_metrics) — plots inertia and silhouette side by side to help choose k.\nplot_pca_segments(X, labels) — projects the feature matrix to two principal components and plots colored by cluster label.\ntop_categories_by_segment(df, segment_col, cat_cols) — returns the modal category value for each categorical column by segment.",
+    "crumbs": [
+      "Home",
+      "Setup"
+    ]
+  },
+  {
+    "objectID": "setup.html#session-info",
+    "href": "setup.html#session-info",
+    "title": "Setup",
+    "section": "Session info",
+    "text": "Session info\n\n\nPython: 3.14.2\npandas: 3.0.0\nnumpy: 2.4.1\nscikit-learn: 1.8.0",
+    "crumbs": [
+      "Home",
+      "Setup"
+    ]
+  },
+  {
+    "objectID": "deployment.html",
+    "href": "deployment.html",
+    "title": "Deployment Guide",
+    "section": "",
+    "text": "Quarto supports publishing websites to GitHub Pages by rendering the site locally into a docs/ directory and then configuring GitHub Pages to publish from that directory. citeturn580333search2\nThat is the pattern used in this project:\nproject:\n  type: website\n  output-dir: docs\nThis is a good default because it keeps the source files readable and the published output explicit."
+  },
+  {
+    "objectID": "deployment.html#static-github-pages-pattern",
+    "href": "deployment.html#static-github-pages-pattern",
+    "title": "Deployment Guide",
+    "section": "",
+    "text": "Quarto supports publishing websites to GitHub Pages by rendering the site locally into a docs/ directory and then configuring GitHub Pages to publish from that directory. citeturn580333search2\nThat is the pattern used in this project:\nproject:\n  type: website\n  output-dir: docs\nThis is a good default because it keeps the source files readable and the published output explicit."
+  },
+  {
+    "objectID": "deployment.html#why-keep-the-main-tutorial-static",
+    "href": "deployment.html#why-keep-the-main-tutorial-static",
+    "title": "Deployment Guide",
+    "section": "2. Why keep the main tutorial static?",
+    "text": "2. Why keep the main tutorial static?\nThe main segmentation tutorial uses executable Python chunks but is primarily a teaching document, not a full application. Keeping it static makes GitHub Pages deployment simple and robust.\nQuarto websites share navigation and rendering options across pages through _quarto.yml, which makes this mini-project easy to grow into a larger teaching site. citeturn580333search8turn580333search17"
+  },
+  {
+    "objectID": "deployment.html#browser-side-interactive-pattern",
+    "href": "deployment.html#browser-side-interactive-pattern",
+    "title": "Deployment Guide",
+    "section": "3. Browser-side interactive pattern",
+    "text": "3. Browser-side interactive pattern\nWhen you want sliders or lightweight interaction without hosting a Python server, the cleanest approach is a browser-side pattern using Shinylive. The Shinylive Quarto extension is designed to embed Shiny for Python applications inside Quarto documents and run Python in the browser. citeturn231216view0\nThis is useful for small interactive controls such as:\n\nchanging the number of clusters,\nchanging synthetic sample size,\nswitching feature pairs,\nshowing the effect of scaling."
+  },
+  {
+    "objectID": "deployment.html#server-backed-versus-browser-backed-interactivity",
+    "href": "deployment.html#server-backed-versus-browser-backed-interactivity",
+    "title": "Deployment Guide",
+    "section": "4. Server-backed versus browser-backed interactivity",
+    "text": "4. Server-backed versus browser-backed interactivity\nQuarto’s Shiny for Python pages can also run in the more traditional server: shiny mode, but that requires a Python-serving environment rather than plain static hosting. Quarto’s docs note that standard Shiny interactive documents are generated as an HTML page plus an app.py and are typically deployed to a server-capable environment. citeturn407962search2\nGitHub Pages is static hosting, so the browser-side pattern is the better fit there."
+  },
+  {
+    "objectID": "deployment.html#install-the-optional-shinylive-extension",
+    "href": "deployment.html#install-the-optional-shinylive-extension",
+    "title": "Deployment Guide",
+    "section": "5. Install the optional Shinylive extension",
+    "text": "5. Install the optional Shinylive extension\nFrom the project root:\nquarto add quarto-ext/shinylive\nQuarto stores extensions locally in an _extensions directory within the project, and the Quarto docs recommend checking that directory into version control for reproducibility. citeturn720128search6"
+  },
+  {
+    "objectID": "deployment.html#preview-locally",
+    "href": "deployment.html#preview-locally",
+    "title": "Deployment Guide",
+    "section": "6. Preview locally",
+    "text": "6. Preview locally\nFor the static site:\nquarto preview\nFor Shiny for Python documents more generally, Quarto supports preview from the editor or command line with quarto preview. citeturn407962search2"
+  },
+  {
+    "objectID": "deployment.html#publish-with-github-pages",
+    "href": "deployment.html#publish-with-github-pages",
+    "title": "Deployment Guide",
+    "section": "7. Publish with GitHub Pages",
+    "text": "7. Publish with GitHub Pages\nYou have two practical options:\n\nOption A: Commit docs/\n\nRun quarto render\nCommit the generated docs/\nIn GitHub repository settings, publish from docs/ on the default branch\n\n\n\nOption B: Use GitHub Actions\nThis project includes a starter workflow in .github/workflows/publish.yml.\nQuarto documents GitHub Actions as a supported CI path for publishing. citeturn580333search20"
+  },
+  {
+    "objectID": "deployment.html#replace-placeholders-before-publishing",
+    "href": "deployment.html#replace-placeholders-before-publishing",
+    "title": "Deployment Guide",
+    "section": "8. Replace placeholders before publishing",
+    "text": "8. Replace placeholders before publishing\nEdit these placeholders in _quarto.yml:\n\nYOUR-USERNAME\nYOUR-REPO\n\nThe site-url matters for some website features, including feeds and canonical site behavior. Quarto notes that site-url should be set for generated feeds and website features that depend on the final URL. citeturn580333search21"
+  },
+  {
+    "objectID": "adaptation.html",
+    "href": "adaptation.html",
+    "title": "5. Recommended Adaptation Patterns",
+    "section": "",
+    "text": "Replace the synthetic survey with your real table and:\n\nmap Likert items to numeric scores,\nconsider one-hot encoding for purely nominal variables,\ncompare KMeans with AgglomerativeClustering.",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "5. Adaptation Patterns"
+    ]
+  },
+  {
+    "objectID": "adaptation.html#for-real-survey-data",
+    "href": "adaptation.html#for-real-survey-data",
+    "title": "5. Recommended Adaptation Patterns",
+    "section": "",
+    "text": "Replace the synthetic survey with your real table and:\n\nmap Likert items to numeric scores,\nconsider one-hot encoding for purely nominal variables,\ncompare KMeans with AgglomerativeClustering.",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "5. Adaptation Patterns"
+    ]
+  },
+  {
+    "objectID": "adaptation.html#for-real-transaction-data",
+    "href": "adaptation.html#for-real-transaction-data",
+    "title": "5. Recommended Adaptation Patterns",
+    "section": "For real transaction data",
+    "text": "For real transaction data\nBuild a customer-feature table first:\n\nrecency,\npurchase frequency,\nspend,\naverage order value,\ncategory breadth,\ndiscount share,\nreturn rate,\ntenure.\n\nThen:\n\nlog-transform highly skewed variables,\nstandardize,\ntest multiple values of k,\nprofile the segments in business language.",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "5. Adaptation Patterns"
+    ]
+  },
+  {
+    "objectID": "adaptation.html#for-real-crm-data",
+    "href": "adaptation.html#for-real-crm-data",
+    "title": "5. Recommended Adaptation Patterns",
+    "section": "For real CRM data",
+    "text": "For real CRM data\nUse a mixed-data preprocessing pipeline:\n\nimpute missing values,\nscale numerics,\none-hot encode categoricals,\ncluster transformed features,\nsummarize both means and top categories by segment.",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "5. Adaptation Patterns"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Market Segmentation in Python",
+    "section": "",
+    "text": "This tutorial is organized around three common segmentation settings:\n\nSurvey data with attitudinal and preference variables.\nTransaction data with customer-level behavioral features such as recency, frequency, and spending.\nCRM data with mixed numeric and categorical account fields.\n\nThe emphasis is on a workflow that is browser-friendly and relatively Pyodide-compatible:\n\nnumpy\npandas\nmatplotlib\nscikit-learn\n\nThat means avoiding packages that are excellent on the desktop but less convenient in browser runtimes.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#overview",
+    "href": "index.html#overview",
+    "title": "Market Segmentation in Python",
+    "section": "",
+    "text": "This tutorial is organized around three common segmentation settings:\n\nSurvey data with attitudinal and preference variables.\nTransaction data with customer-level behavioral features such as recency, frequency, and spending.\nCRM data with mixed numeric and categorical account fields.\n\nThe emphasis is on a workflow that is browser-friendly and relatively Pyodide-compatible:\n\nnumpy\npandas\nmatplotlib\nscikit-learn\n\nThat means avoiding packages that are excellent on the desktop but less convenient in browser runtimes.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#what-this-tutorial-does",
+    "href": "index.html#what-this-tutorial-does",
+    "title": "Market Segmentation in Python",
+    "section": "What this tutorial does",
+    "text": "What this tutorial does\nFor each data type, the tutorial will:\n\ngenerate a synthetic dataset with a known latent segment structure,\npreprocess the data,\ncompare candidate numbers of clusters,\nfit a segmentation model,\nvisualize the result,\nproduce segment-profiling tables.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#pyodide-and-quarto-notes",
+    "href": "index.html#pyodide-and-quarto-notes",
+    "title": "Market Segmentation in Python",
+    "section": "Pyodide and Quarto notes",
+    "text": "Pyodide and Quarto notes\nThis site is written as normal Quarto .qmd files using executable Python chunks. It can be rendered locally with Quarto and Jupyter. It is also designed to be Pyodide-friendly in the sense that it relies on packages that are commonly available in Pyodide-based browser execution environments.\nA few practical notes:\n\nKeep datasets modest in size for browser execution.\nPrefer matplotlib over heavier plotting stacks.\nAvoid file I/O dependencies.\nFavor scikit-learn pipelines and transformers over niche clustering packages.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#pages",
+    "href": "index.html#pages",
+    "title": "Market Segmentation in Python",
+    "section": "Pages",
+    "text": "Pages\n\n\n\nPage\nDescription\n\n\n\n\nSetup\nImports and shared helper functions\n\n\n1. Survey\nK-means on attitudinal Likert-scale data\n\n\n2. Transaction\nRFM-style behavioral feature segmentation\n\n\n3. CRM\nMixed numeric + categorical account segmentation\n\n\n4. Comparison\nSilhouette scores across all three settings\n\n\n5. Adaptation Patterns\nGuidance for applying to real data\n\n\n6. Hierarchical Clustering\nAlternative to K-means for survey data\n\n\nWarnings\nCommon failure modes to watch for",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "transaction.html",
+    "href": "transaction.html",
+    "title": "2. Transaction Segmentation",
+    "section": "",
+    "text": "Transaction segmentation usually starts with customer-level feature engineering rather than raw order lines. Common features include:\n\nrecency,\npurchase frequency,\nmonetary value,\naverage order value,\ndiscount reliance,\ncategory breadth.\n\nThis section generates synthetic RFM-style data plus two additional behavioral variables.",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "2. Transaction"
+    ]
+  },
+  {
+    "objectID": "transaction.html#framing",
+    "href": "transaction.html#framing",
+    "title": "2. Transaction Segmentation",
+    "section": "",
+    "text": "Transaction segmentation usually starts with customer-level feature engineering rather than raw order lines. Common features include:\n\nrecency,\npurchase frequency,\nmonetary value,\naverage order value,\ndiscount reliance,\ncategory breadth.\n\nThis section generates synthetic RFM-style data plus two additional behavioral variables.",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "2. Transaction"
+    ]
+  },
+  {
+    "objectID": "transaction.html#generate-synthetic-transaction-features",
+    "href": "transaction.html#generate-synthetic-transaction-features",
+    "title": "2. Transaction Segmentation",
+    "section": "Generate synthetic transaction features",
+    "text": "Generate synthetic transaction features\n\n\n\n\n\n\n\n\n\ntrue_segment\nrecency_days\npurchase_frequency\nmonetary_value\ndiscount_share\ncategory_breadth\navg_order_value\n\n\n\n\n0\nDormant Discount\n233.712269\n2.368862\n133.639210\n0.694712\n1.772206\n37.634180\n\n\n1\nDormant Discount\n173.200715\n2.848776\n123.589361\n0.776227\n2.109718\n47.154801\n\n\n2\nDormant Discount\n253.770304\n4.451013\n114.839513\n0.590812\n1.586901\n54.751447\n\n\n3\nDormant Discount\n262.325412\n4.576981\n175.589664\n0.755263\n1.513246\n24.187327\n\n\n4\nDormant Discount\n132.203417\n2.569381\n98.222739\n0.911295\n1.864648\n58.337862",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "2. Transaction"
+    ]
+  },
+  {
+    "objectID": "transaction.html#create-transformed-modeling-features",
+    "href": "transaction.html#create-transformed-modeling-features",
+    "title": "2. Transaction Segmentation",
+    "section": "Create transformed modeling features",
+    "text": "Create transformed modeling features\n\n\n\n\n\n\n\n\n\nrecency_log\npurchase_frequency\nmonetary_log\ndiscount_share\ncategory_breadth\navg_order_log\n\n\n\n\ncount\n450.00\n450.00\n450.00\n450.00\n450.00\n450.00\n\n\nmean\n3.98\n12.03\n6.32\n0.36\n3.70\n4.44\n\n\nstd\n1.19\n9.27\n1.24\n0.28\n1.87\n0.53\n\n\nmin\n0.69\n1.00\n2.40\n0.00\n1.00\n2.91\n\n\n25%\n2.97\n3.09\n4.96\n0.09\n2.13\n4.01\n\n\n50%\n3.99\n9.69\n6.48\n0.27\n3.65\n4.37\n\n\n75%\n5.26\n21.21\n7.62\n0.66\n5.13\n4.97\n\n\nmax\n5.86\n36.72\n8.09\n0.95\n8.89\n5.40",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "2. Transaction"
+    ]
+  },
+  {
+    "objectID": "transaction.html#choose-the-number-of-clusters",
+    "href": "transaction.html#choose-the-number-of-clusters",
+    "title": "2. Transaction Segmentation",
+    "section": "Choose the number of clusters",
+    "text": "Choose the number of clusters\n\n\n\n\n\n\n\n\n\nk\ninertia\nsilhouette\n\n\n\n\n0\n2\n914.733053\n0.567771\n\n\n1\n3\n293.778213\n0.639905\n\n\n2\n4\n265.949635\n0.500574\n\n\n3\n5\n243.713140\n0.359104\n\n\n4\n6\n225.173144\n0.220057",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "2. Transaction"
+    ]
+  },
+  {
+    "objectID": "transaction.html#fit-the-transaction-segmentation-model",
+    "href": "transaction.html#fit-the-transaction-segmentation-model",
+    "title": "2. Transaction Segmentation",
+    "section": "Fit the transaction segmentation model",
+    "text": "Fit the transaction segmentation model\n\n\n\n\n\n\n\n\n\ntrue_segment\nsegment\nrecency_log\npurchase_frequency\nmonetary_log\ndiscount_share\ncategory_breadth\navg_order_log\n\n\n\n\n0\nDormant Discount\n2\n5.458360\n2.368862\n4.902599\n0.694712\n1.772206\n3.654137\n\n\n1\nDormant Discount\n2\n5.160208\n2.848776\n4.825023\n0.776227\n2.109718\n3.874421\n\n\n2\nDormant Discount\n2\n5.540362\n4.451013\n4.752206\n0.590812\n1.586901\n4.020903\n\n\n3\nDormant Discount\n2\n5.573391\n4.576981\n5.173829\n0.755263\n1.513246\n3.226341\n\n\n4\nDormant Discount\n2\n4.891877\n2.569381\n4.597367\n0.911295\n1.864648\n4.083248",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "2. Transaction"
+    ]
+  },
+  {
+    "objectID": "transaction.html#visualize-the-transaction-segments",
+    "href": "transaction.html#visualize-the-transaction-segments",
+    "title": "2. Transaction Segmentation",
+    "section": "Visualize the transaction segments",
+    "text": "Visualize the transaction segments",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "2. Transaction"
+    ]
+  },
+  {
+    "objectID": "transaction.html#profile-the-transaction-segments",
+    "href": "transaction.html#profile-the-transaction-segments",
+    "title": "2. Transaction Segmentation",
+    "section": "Profile the transaction segments",
+    "text": "Profile the transaction segments\n\n\n\n\n\n\n\n\n\nsegment_rank\nrecency_days\npurchase_frequency\nmonetary_value\ndiscount_share\ncategory_breadth\navg_order_value\n\n\nsegment\n\n\n\n\n\n\n\n\n\n\n\n1\n1\n14.17\n23.85\n2280.21\n0.07\n5.82\n160.94\n\n\n0\n2\n54.43\n9.76\n654.33\n0.27\n3.56\n78.50\n\n\n2\n3\n217.72\n2.49\n121.84\n0.72\n1.73\n48.57",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "2. Transaction"
+    ]
+  },
+  {
+    "objectID": "transaction.html#cross-tab-against-the-latent-transaction-segments",
+    "href": "transaction.html#cross-tab-against-the-latent-transaction-segments",
+    "title": "2. Transaction Segmentation",
+    "section": "Cross-tab against the latent transaction segments",
+    "text": "Cross-tab against the latent transaction segments\n\n\n\n\n\n\n\n\ntrue_segment\nDormant Discount\nHigh Value Loyal\nSteady Midvalue\n\n\nsegment\n\n\n\n\n\n\n\n0\n0\n0\n150\n\n\n1\n0\n150\n0\n\n\n2\n150\n0\n0",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "2. Transaction"
+    ]
+  },
+  {
+    "objectID": "transaction.html#interpretation",
+    "href": "transaction.html#interpretation",
+    "title": "2. Transaction Segmentation",
+    "section": "Interpretation",
+    "text": "Interpretation\nA typical business reading might be:\n\nhigh-recency, low-frequency, high-discount customers are at-risk bargain buyers,\nmedium-value and medium-frequency customers are core mainstream buyers,\nlow-recency, high-frequency, high-spend customers are premium loyalists.",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "2. Transaction"
+    ]
+  },
+  {
+    "objectID": "comparison.html",
+    "href": "comparison.html",
+    "title": "4. Compact Comparison",
+    "section": "",
+    "text": "This table shows the chosen k and the corresponding silhouette score for each of the three segmentation settings.\n\n\n\n\n\n\n\n\n\ndataset\nchosen_k\nsilhouette_at_k\n\n\n\n\n0\nSurvey\n3\n0.491\n\n\n1\nTransaction\n3\n0.632\n\n\n2\nCRM\n3\n0.287\n\n\n\n\n\n\n\nAll three settings find a reasonably clean three-cluster solution with synthetic data. In practice, silhouette scores on real data are often lower, and the choice of k requires more judgment than the elbow and silhouette plots alone can provide.",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "4. Comparison"
+    ]
+  },
+  {
+    "objectID": "tutorial.html",
+    "href": "tutorial.html",
+    "title": "Market Segmentation in Python: A Quarto Tutorial with Synthetic Data",
+    "section": "",
+    "text": "This tutorial is organized around three common segmentation settings:\n\nSurvey data with attitudinal and preference variables.\nTransaction data with customer-level behavioral features such as recency, frequency, and spending.\nCRM data with mixed numeric and categorical account fields.\n\nThe emphasis is on a workflow that is browser-friendly and relatively Pyodide-compatible:\n\nnumpy\npandas\nmatplotlib\nscikit-learn\n\nThat means avoiding packages that are excellent on the desktop but less convenient in browser runtimes."
+  },
+  {
+    "objectID": "tutorial.html#overview",
+    "href": "tutorial.html#overview",
+    "title": "Market Segmentation in Python: A Quarto Tutorial with Synthetic Data",
+    "section": "",
+    "text": "This tutorial is organized around three common segmentation settings:\n\nSurvey data with attitudinal and preference variables.\nTransaction data with customer-level behavioral features such as recency, frequency, and spending.\nCRM data with mixed numeric and categorical account fields.\n\nThe emphasis is on a workflow that is browser-friendly and relatively Pyodide-compatible:\n\nnumpy\npandas\nmatplotlib\nscikit-learn\n\nThat means avoiding packages that are excellent on the desktop but less convenient in browser runtimes."
+  },
+  {
+    "objectID": "tutorial.html#what-this-tutorial-does",
+    "href": "tutorial.html#what-this-tutorial-does",
+    "title": "Market Segmentation in Python: A Quarto Tutorial with Synthetic Data",
+    "section": "What this tutorial does",
+    "text": "What this tutorial does\nFor each data type, the tutorial will:\n\ngenerate a synthetic dataset with a known latent segment structure,\npreprocess the data,\ncompare candidate numbers of clusters,\nfit a segmentation model,\nvisualize the result,\nproduce segment-profiling tables."
+  },
+  {
+    "objectID": "tutorial.html#pyodide-and-quarto-notes",
+    "href": "tutorial.html#pyodide-and-quarto-notes",
+    "title": "Market Segmentation in Python: A Quarto Tutorial with Synthetic Data",
+    "section": "Pyodide and Quarto notes",
+    "text": "Pyodide and Quarto notes\nThis file is written as a normal Quarto .qmd using executable Python chunks. It can be rendered locally with Quarto and Jupyter. It is also designed to be Pyodide-friendly in the sense that it relies on packages that are commonly available in Pyodide-based browser execution environments.\nA few practical notes:\n\nKeep datasets modest in size for browser execution.\nPrefer matplotlib over heavier plotting stacks.\nAvoid file I/O dependencies.\nFavor scikit-learn pipelines and transformers over niche clustering packages."
+  },
+  {
+    "objectID": "tutorial.html#setup",
+    "href": "tutorial.html#setup",
+    "title": "Market Segmentation in Python: A Quarto Tutorial with Synthetic Data",
+    "section": "Setup",
+    "text": "Setup\n\n\nShow code\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\nfrom sklearn.base import clone\nfrom sklearn.compose import ColumnTransformer\nfrom sklearn.cluster import KMeans, AgglomerativeClustering\nfrom sklearn.decomposition import PCA\nfrom sklearn.impute import SimpleImputer\nfrom sklearn.metrics import silhouette_score\nfrom sklearn.pipeline import Pipeline\nfrom sklearn.preprocessing import OneHotEncoder, StandardScaler\n\nRNG = np.random.default_rng(42)\npd.set_option(\"display.max_columns\", 100)\n\n\n\n\nShow code\ndef evaluate_kmeans_range(X, k_values, random_state=42, n_init=20):\n    rows = []\n    for k in k_values:\n        model = KMeans(n_clusters=k, random_state=random_state, n_init=n_init)\n        labels = model.fit_predict(X)\n        rows.append({\n            \"k\": k,\n            \"inertia\": model.inertia_,\n            \"silhouette\": silhouette_score(X, labels)\n        })\n    return pd.DataFrame(rows)\n\n\ndef add_segment_order(summary_df, sort_col, ascending=True):\n    ordered = summary_df.sort_values(sort_col, ascending=ascending).copy()\n    ordered.insert(0, \"segment_rank\", range(1, len(ordered) + 1))\n    return ordered\n\n\ndef plot_metric_curve(df_metrics, x_col=\"k\", y_cols=(\"inertia\", \"silhouette\"), title_prefix=\"\"):\n    fig, axes = plt.subplots(1, 2, figsize=(12, 4))\n\n    axes[0].plot(df_metrics[x_col], df_metrics[y_cols[0]], marker=\"o\")\n    axes[0].set_title(f\"{title_prefix}Inertia by k\")\n    axes[0].set_xlabel(\"k\")\n    axes[0].set_ylabel(\"Inertia\")\n\n    axes[1].plot(df_metrics[x_col], df_metrics[y_cols[1]], marker=\"o\")\n    axes[1].set_title(f\"{title_prefix}Silhouette by k\")\n    axes[1].set_xlabel(\"k\")\n    axes[1].set_ylabel(\"Silhouette\")\n\n    plt.tight_layout()\n    plt.show()\n\n\ndef plot_pca_segments(X, labels, title=\"PCA view of segments\"):\n    if hasattr(X, \"toarray\"):\n        X = X.toarray()\n    pca = PCA(n_components=2, random_state=42)\n    coords = pca.fit_transform(X)\n\n    plt.figure(figsize=(7, 5))\n    scatter = plt.scatter(coords[:, 0], coords[:, 1], c=labels)\n    plt.title(title)\n    plt.xlabel(\"PC1\")\n    plt.ylabel(\"PC2\")\n    plt.show()\n\n\ndef top_categories_by_segment(df, segment_col, cat_cols):\n    pieces = []\n    for col in cat_cols:\n        mode_vals = (\n            df.groupby(segment_col)[col]\n            .agg(lambda s: s.mode().iloc[0] if not s.mode().empty else np.nan)\n            .rename(col)\n        )\n        pieces.append(mode_vals)\n    return pd.concat(pieces, axis=1)"
+  },
+  {
+    "objectID": "tutorial.html#survey-segmentation",
+    "href": "tutorial.html#survey-segmentation",
+    "title": "Market Segmentation in Python: A Quarto Tutorial with Synthetic Data",
+    "section": "1. Survey segmentation",
+    "text": "1. Survey segmentation\n\nFraming\nSurvey segmentation is common when you have attitudinal or preference variables such as:\n\nprice sensitivity,\nquality emphasis,\nenvironmental concern,\nnovelty seeking,\nchannel preference.\n\nIn practice, survey segmentation often uses ordinal scales or one-hot encoded categories. To keep this tutorial Pyodide-friendly, we will build a synthetic survey with Likert-like numeric items and use K-means after standardization.\n\n\nGenerate synthetic survey data\n\n\nShow code\nn_per_segment = 120\nsegments = np.repeat([\"Value Seekers\", \"Quality Loyalists\", \"Trend Explorers\"], n_per_segment)\n\nsurvey = pd.DataFrame({\n    \"true_segment\": segments,\n    \"price_importance\": np.concatenate([\n        RNG.normal(4.6, 0.4, n_per_segment),\n        RNG.normal(2.0, 0.5, n_per_segment),\n        RNG.normal(3.0, 0.6, n_per_segment),\n    ]),\n    \"quality_importance\": np.concatenate([\n        RNG.normal(2.3, 0.5, n_per_segment),\n        RNG.normal(4.7, 0.4, n_per_segment),\n        RNG.normal(3.8, 0.5, n_per_segment),\n    ]),\n    \"innovation_interest\": np.concatenate([\n        RNG.normal(2.4, 0.5, n_per_segment),\n        RNG.normal(3.0, 0.5, n_per_segment),\n        RNG.normal(4.8, 0.3, n_per_segment),\n    ]),\n    \"eco_concern\": np.concatenate([\n        RNG.normal(3.0, 0.7, n_per_segment),\n        RNG.normal(4.0, 0.5, n_per_segment),\n        RNG.normal(3.7, 0.6, n_per_segment),\n    ]),\n    \"brand_loyalty\": np.concatenate([\n        RNG.normal(2.2, 0.6, n_per_segment),\n        RNG.normal(4.6, 0.4, n_per_segment),\n        RNG.normal(3.1, 0.6, n_per_segment),\n    ]),\n    \"social_media_engagement\": np.concatenate([\n        RNG.normal(2.8, 0.7, n_per_segment),\n        RNG.normal(2.2, 0.6, n_per_segment),\n        RNG.normal(4.7, 0.4, n_per_segment),\n    ])\n})\n\nlikert_cols = [\n    \"price_importance\", \"quality_importance\", \"innovation_interest\",\n    \"eco_concern\", \"brand_loyalty\", \"social_media_engagement\"\n]\n\nsurvey[likert_cols] = survey[likert_cols].clip(1, 5).round(0)\nsurvey.head()\n\n\n\n\n\n\n\n\n\ntrue_segment\nprice_importance\nquality_importance\ninnovation_interest\neco_concern\nbrand_loyalty\nsocial_media_engagement\n\n\n\n\n0\nValue Seekers\n5.0\n2.0\n2.0\n3.0\n2.0\n3.0\n\n\n1\nValue Seekers\n4.0\n2.0\n3.0\n3.0\n2.0\n3.0\n\n\n2\nValue Seekers\n5.0\n3.0\n1.0\n3.0\n1.0\n3.0\n\n\n3\nValue Seekers\n5.0\n2.0\n2.0\n3.0\n3.0\n3.0\n\n\n4\nValue Seekers\n4.0\n2.0\n2.0\n3.0\n2.0\n3.0\n\n\n\n\n\n\n\n\n\nInspect the synthetic survey\n\n\nShow code\nsurvey.groupby(\"true_segment\")[likert_cols].mean().round(2)\n\n\n\n\n\n\n\n\n\nprice_importance\nquality_importance\ninnovation_interest\neco_concern\nbrand_loyalty\nsocial_media_engagement\n\n\ntrue_segment\n\n\n\n\n\n\n\n\n\n\nQuality Loyalists\n1.99\n4.66\n2.97\n3.96\n4.62\n2.08\n\n\nTrend Explorers\n3.01\n3.76\n4.86\n3.74\n3.00\n4.72\n\n\nValue Seekers\n4.58\n2.27\n2.41\n2.98\n2.13\n2.68\n\n\n\n\n\n\n\n\n\nStandardize and choose the number of clusters\n\n\nShow code\nsurvey_scaler = StandardScaler()\nX_survey = survey_scaler.fit_transform(survey[likert_cols])\n\nsurvey_metrics = evaluate_kmeans_range(X_survey, k_values=range(2, 7))\nsurvey_metrics\n\n\n\n\n\n\n\n\n\nk\ninertia\nsilhouette\n\n\n\n\n0\n2\n1275.993415\n0.396234\n\n\n1\n3\n676.144353\n0.491191\n\n\n2\n4\n606.215749\n0.419992\n\n\n3\n5\n543.666777\n0.351835\n\n\n4\n6\n501.085845\n0.275706\n\n\n\n\n\n\n\n\n\nShow code\nplot_metric_curve(survey_metrics, title_prefix=\"Survey: \")\n\n\n\n\n\n\n\n\n\n\n\nFit the survey segmentation model\n\n\nShow code\nk_survey = 3\nsurvey_model = KMeans(n_clusters=k_survey, random_state=42, n_init=20)\nsurvey[\"segment\"] = survey_model.fit_predict(X_survey)\nsurvey[[\"true_segment\", \"segment\"] + likert_cols].head()\n\n\n\n\n\n\n\n\n\ntrue_segment\nsegment\nprice_importance\nquality_importance\ninnovation_interest\neco_concern\nbrand_loyalty\nsocial_media_engagement\n\n\n\n\n0\nValue Seekers\n2\n5.0\n2.0\n2.0\n3.0\n2.0\n3.0\n\n\n1\nValue Seekers\n2\n4.0\n2.0\n3.0\n3.0\n2.0\n3.0\n\n\n2\nValue Seekers\n2\n5.0\n3.0\n1.0\n3.0\n1.0\n3.0\n\n\n3\nValue Seekers\n2\n5.0\n2.0\n2.0\n3.0\n3.0\n3.0\n\n\n4\nValue Seekers\n2\n4.0\n2.0\n2.0\n3.0\n2.0\n3.0\n\n\n\n\n\n\n\n\n\nVisualize the survey segments\n\n\nShow code\nplot_pca_segments(X_survey, survey[\"segment\"], title=\"Survey segments projected onto two principal components\")\n\n\n\n\n\n\n\n\n\n\n\nSegment profiles for the survey\n\n\nShow code\nsurvey_profile = survey.groupby(\"segment\")[likert_cols].mean().round(2)\nsurvey_profile = add_segment_order(survey_profile, sort_col=\"price_importance\", ascending=False)\nsurvey_profile\n\n\n\n\n\n\n\n\n\nsegment_rank\nprice_importance\nquality_importance\ninnovation_interest\neco_concern\nbrand_loyalty\nsocial_media_engagement\n\n\nsegment\n\n\n\n\n\n\n\n\n\n\n\n2\n1\n4.58\n2.27\n2.41\n2.98\n2.13\n2.68\n\n\n1\n2\n3.01\n3.76\n4.86\n3.74\n3.00\n4.72\n\n\n0\n3\n1.99\n4.66\n2.97\n3.96\n4.62\n2.08\n\n\n\n\n\n\n\n\n\nCross-tab against the known latent segments\n\n\nShow code\npd.crosstab(survey[\"segment\"], survey[\"true_segment\"])\n\n\n\n\n\n\n\n\ntrue_segment\nQuality Loyalists\nTrend Explorers\nValue Seekers\n\n\nsegment\n\n\n\n\n\n\n\n0\n120\n0\n0\n\n\n1\n0\n120\n0\n\n\n2\n0\n0\n120\n\n\n\n\n\n\n\n\n\nInterpretation\nA typical interpretation here would be:\n\nthe segment with high price_importance and lower brand_loyalty is a value-oriented segment,\nthe segment with high quality_importance and brand_loyalty is a premium/loyal segment,\nthe segment with high innovation_interest and social_media_engagement is a trend-seeking segment."
+  },
+  {
+    "objectID": "tutorial.html#transaction-segmentation",
+    "href": "tutorial.html#transaction-segmentation",
+    "title": "Market Segmentation in Python: A Quarto Tutorial with Synthetic Data",
+    "section": "2. Transaction segmentation",
+    "text": "2. Transaction segmentation\n\nFraming\nTransaction segmentation usually starts with customer-level feature engineering rather than raw order lines. Common features include:\n\nrecency,\npurchase frequency,\nmonetary value,\naverage order value,\ndiscount reliance,\ncategory breadth.\n\nThis section generates synthetic RFM-style data plus two additional behavioral variables.\n\n\nGenerate synthetic transaction features\n\n\nShow code\nn_txn = 450\nlatent = np.repeat([\"Dormant Discount\", \"Steady Midvalue\", \"High Value Loyal\"], n_txn // 3)\n\ntransaction = pd.DataFrame({\n    \"true_segment\": latent,\n    \"recency_days\": np.concatenate([\n        RNG.normal(220, 45, n_txn // 3),\n        RNG.normal(55, 18, n_txn // 3),\n        RNG.normal(14, 6, n_txn // 3),\n    ]),\n    \"purchase_frequency\": np.concatenate([\n        RNG.normal(2.5, 1.0, n_txn // 3),\n        RNG.normal(10.0, 2.0, n_txn // 3),\n        RNG.normal(24.0, 4.0, n_txn // 3),\n    ]),\n    \"monetary_value\": np.concatenate([\n        RNG.normal(120, 35, n_txn // 3),\n        RNG.normal(650, 120, n_txn // 3),\n        RNG.normal(2300, 350, n_txn // 3),\n    ]),\n    \"discount_share\": np.concatenate([\n        RNG.normal(0.72, 0.10, n_txn // 3),\n        RNG.normal(0.28, 0.08, n_txn // 3),\n        RNG.normal(0.08, 0.04, n_txn // 3),\n    ]),\n    \"category_breadth\": np.concatenate([\n        RNG.normal(1.8, 0.7, n_txn // 3),\n        RNG.normal(3.6, 0.9, n_txn // 3),\n        RNG.normal(5.8, 1.1, n_txn // 3),\n    ]),\n    \"avg_order_value\": np.concatenate([\n        RNG.normal(48, 10, n_txn // 3),\n        RNG.normal(78, 14, n_txn // 3),\n        RNG.normal(160, 25, n_txn // 3),\n    ])\n})\n\ntransaction[\"recency_days\"] = transaction[\"recency_days\"].clip(lower=1)\ntransaction[\"purchase_frequency\"] = transaction[\"purchase_frequency\"].clip(lower=1)\ntransaction[\"monetary_value\"] = transaction[\"monetary_value\"].clip(lower=10)\ntransaction[\"discount_share\"] = transaction[\"discount_share\"].clip(0, 1)\ntransaction[\"category_breadth\"] = transaction[\"category_breadth\"].clip(lower=1)\ntransaction[\"avg_order_value\"] = transaction[\"avg_order_value\"].clip(lower=5)\n\ntransaction.head()\n\n\n\n\n\n\n\n\n\ntrue_segment\nrecency_days\npurchase_frequency\nmonetary_value\ndiscount_share\ncategory_breadth\navg_order_value\n\n\n\n\n0\nDormant Discount\n196.530761\n1.000000\n161.245780\n0.771071\n2.716668\n62.283383\n\n\n1\nDormant Discount\n177.522091\n3.323721\n126.973331\n0.580616\n2.738178\n46.648464\n\n\n2\nDormant Discount\n278.552126\n1.897022\n206.513318\n0.657438\n2.161893\n55.464182\n\n\n3\nDormant Discount\n248.503969\n2.107774\n125.967787\n0.827572\n1.481418\n40.479713\n\n\n4\nDormant Discount\n247.224702\n1.000000\n109.847698\n0.755676\n1.632370\n46.351556\n\n\n\n\n\n\n\n\n\nCreate transformed modeling features\n\n\nShow code\ntransaction[\"monetary_log\"] = np.log1p(transaction[\"monetary_value\"])\ntransaction[\"avg_order_log\"] = np.log1p(transaction[\"avg_order_value\"])\ntransaction[\"recency_log\"] = np.log1p(transaction[\"recency_days\"])\n\ntransaction_features = [\n    \"recency_log\", \"purchase_frequency\", \"monetary_log\",\n    \"discount_share\", \"category_breadth\", \"avg_order_log\"\n]\n\nX_txn = StandardScaler().fit_transform(transaction[transaction_features])\ntransaction[transaction_features].describe().round(2)\n\n\n\n\n\n\n\n\n\nrecency_log\npurchase_frequency\nmonetary_log\ndiscount_share\ncategory_breadth\navg_order_log\n\n\n\n\ncount\n450.00\n450.00\n450.00\n450.00\n450.00\n450.00\n\n\nmean\n3.99\n12.28\n6.32\n0.36\n3.74\n4.42\n\n\nstd\n1.18\n9.45\n1.23\n0.29\n1.82\n0.52\n\n\nmin\n0.69\n1.00\n4.08\n0.00\n1.00\n3.09\n\n\n25%\n2.96\n3.17\n4.98\n0.10\n2.09\n3.99\n\n\n50%\n4.02\n10.02\n6.49\n0.27\n3.62\n4.38\n\n\n75%\n5.23\n21.39\n7.64\n0.66\n5.15\n4.95\n\n\nmax\n5.85\n33.56\n8.10\n0.97\n9.13\n5.45\n\n\n\n\n\n\n\n\n\nChoose the number of clusters\n\n\nShow code\ntransaction_metrics = evaluate_kmeans_range(X_txn, k_values=range(2, 7))\ntransaction_metrics\n\n\n\n\n\n\n\n\n\nk\ninertia\nsilhouette\n\n\n\n\n0\n2\n902.750823\n0.572048\n\n\n1\n3\n308.338167\n0.632005\n\n\n2\n4\n272.537875\n0.512139\n\n\n3\n5\n247.174300\n0.377733\n\n\n4\n6\n230.052651\n0.224390\n\n\n\n\n\n\n\n\n\nShow code\nplot_metric_curve(transaction_metrics, title_prefix=\"Transaction: \")\n\n\n\n\n\n\n\n\n\n\n\nFit the transaction segmentation model\n\n\nShow code\nk_txn = 3\ntransaction_model = KMeans(n_clusters=k_txn, random_state=42, n_init=20)\ntransaction[\"segment\"] = transaction_model.fit_predict(X_txn)\ntransaction[[\"true_segment\", \"segment\"] + transaction_features].head()\n\n\n\n\n\n\n\n\n\ntrue_segment\nsegment\nrecency_log\npurchase_frequency\nmonetary_log\ndiscount_share\ncategory_breadth\navg_order_log\n\n\n\n\n0\nDormant Discount\n2\n5.285894\n1.000000\n5.089112\n0.771071\n2.716668\n4.147623\n\n\n1\nDormant Discount\n2\n5.184712\n3.323721\n4.851822\n0.580616\n2.738178\n3.863850\n\n\n2\nDormant Discount\n2\n5.633189\n1.897022\n5.335196\n0.657438\n2.161893\n4.033606\n\n\n3\nDormant Discount\n2\n5.519475\n2.107774\n4.843933\n0.827572\n1.481418\n3.725204\n\n\n4\nDormant Discount\n2\n5.514334\n1.000000\n4.708157\n0.755676\n1.632370\n3.857600\n\n\n\n\n\n\n\n\n\nVisualize the transaction segments\n\n\nShow code\nplot_pca_segments(X_txn, transaction[\"segment\"], title=\"Transaction segments projected onto two principal components\")\n\n\n\n\n\n\n\n\n\n\n\nProfile the transaction segments\n\n\nShow code\ntransaction_profile_cols = [\n    \"recency_days\", \"purchase_frequency\", \"monetary_value\",\n    \"discount_share\", \"category_breadth\", \"avg_order_value\"\n]\n\ntransaction_profile = (\n    transaction.groupby(\"segment\")[transaction_profile_cols]\n    .mean()\n    .round(2)\n)\ntransaction_profile = add_segment_order(transaction_profile, sort_col=\"monetary_value\", ascending=False)\ntransaction_profile\n\n\n\n\n\n\n\n\n\nsegment_rank\nrecency_days\npurchase_frequency\nmonetary_value\ndiscount_share\ncategory_breadth\navg_order_value\n\n\nsegment\n\n\n\n\n\n\n\n\n\n\n\n1\n1\n14.94\n24.29\n2302.25\n0.08\n5.69\n156.49\n\n\n0\n2\n54.93\n10.04\n650.00\n0.28\n3.70\n77.80\n\n\n2\n3\n218.82\n2.49\n122.62\n0.73\n1.81\n48.08\n\n\n\n\n\n\n\n\n\nCross-tab against the latent transaction segments\n\n\nShow code\npd.crosstab(transaction[\"segment\"], transaction[\"true_segment\"])\n\n\n\n\n\n\n\n\ntrue_segment\nDormant Discount\nHigh Value Loyal\nSteady Midvalue\n\n\nsegment\n\n\n\n\n\n\n\n0\n0\n0\n150\n\n\n1\n0\n150\n0\n\n\n2\n150\n0\n0\n\n\n\n\n\n\n\n\n\nInterpretation\nA typical business reading might be:\n\nhigh-recency, low-frequency, high-discount customers are at-risk bargain buyers,\nmedium-value and medium-frequency customers are core mainstream buyers,\nlow-recency, high-frequency, high-spend customers are premium loyalists."
+  },
+  {
+    "objectID": "tutorial.html#crm-segmentation-with-mixed-data",
+    "href": "tutorial.html#crm-segmentation-with-mixed-data",
+    "title": "Market Segmentation in Python: A Quarto Tutorial with Synthetic Data",
+    "section": "3. CRM segmentation with mixed data",
+    "text": "3. CRM segmentation with mixed data\n\nFraming\nCRM and account-level segmentation often combines:\n\nnumeric variables such as tenure, spend, and support load,\ncategorical variables such as region, plan type, channel, and industry.\n\nA mixed-type workflow can be handled cleanly with a ColumnTransformer that standardizes numeric columns and one-hot encodes categorical columns, followed by clustering.\n\n\nGenerate synthetic CRM data\n\n\nShow code\nn_crm = 480\ncrm_latent = np.repeat([\"SMB Self-Serve\", \"Midmarket Partner\", \"Enterprise Direct\"], n_crm // 3)\n\ncrm = pd.DataFrame({\n    \"true_segment\": crm_latent,\n    \"annual_spend\": np.concatenate([\n        RNG.normal(900, 250, n_crm // 3),\n        RNG.normal(6500, 1200, n_crm // 3),\n        RNG.normal(28000, 5000, n_crm // 3),\n    ]),\n    \"tenure_months\": np.concatenate([\n        RNG.normal(6, 3, n_crm // 3),\n        RNG.normal(22, 8, n_crm // 3),\n        RNG.normal(40, 10, n_crm // 3),\n    ]),\n    \"support_tickets\": np.concatenate([\n        RNG.normal(1.5, 1.0, n_crm // 3),\n        RNG.normal(4.2, 1.8, n_crm // 3),\n        RNG.normal(9.0, 2.5, n_crm // 3),\n    ]),\n    \"engagement_score\": np.concatenate([\n        RNG.normal(42, 10, n_crm // 3),\n        RNG.normal(66, 9, n_crm // 3),\n        RNG.normal(82, 7, n_crm // 3),\n    ])\n})\n\ncrm[\"annual_spend\"] = crm[\"annual_spend\"].clip(lower=100)\ncrm[\"tenure_months\"] = crm[\"tenure_months\"].clip(lower=1)\ncrm[\"support_tickets\"] = crm[\"support_tickets\"].clip(lower=0)\ncrm[\"engagement_score\"] = crm[\"engagement_score\"].clip(0, 100)\n\nregion_map = {\n    \"SMB Self-Serve\": [\"West\", \"South\", \"Midwest\"],\n    \"Midmarket Partner\": [\"West\", \"Northeast\", \"Midwest\"],\n    \"Enterprise Direct\": [\"Northeast\", \"West\", \"South\"]\n}\nplan_map = {\n    \"SMB Self-Serve\": [\"Basic\", \"Standard\"],\n    \"Midmarket Partner\": [\"Standard\", \"Premium\"],\n    \"Enterprise Direct\": [\"Premium\", \"Enterprise\"]\n}\nchannel_map = {\n    \"SMB Self-Serve\": [\"Web\", \"Product-Led\"],\n    \"Midmarket Partner\": [\"Partner\", \"Sales\"],\n    \"Enterprise Direct\": [\"Sales\", \"Field\"]\n}\nindustry_map = {\n    \"SMB Self-Serve\": [\"Retail\", \"Services\", \"Education\"],\n    \"Midmarket Partner\": [\"Manufacturing\", \"Healthcare\", \"Services\"],\n    \"Enterprise Direct\": [\"Finance\", \"Technology\", \"Healthcare\"]\n}\n\ncrm[\"region\"] = [RNG.choice(region_map[s]) for s in crm[\"true_segment\"]]\ncrm[\"plan_type\"] = [RNG.choice(plan_map[s]) for s in crm[\"true_segment\"]]\ncrm[\"acquisition_channel\"] = [RNG.choice(channel_map[s]) for s in crm[\"true_segment\"]]\ncrm[\"industry\"] = [RNG.choice(industry_map[s]) for s in crm[\"true_segment\"]]\n\ncrm.head()\n\n\n\n\n\n\n\n\n\ntrue_segment\nannual_spend\ntenure_months\nsupport_tickets\nengagement_score\nregion\nplan_type\nacquisition_channel\nindustry\n\n\n\n\n0\nSMB Self-Serve\n501.010710\n6.564222\n1.117340\n57.705436\nSouth\nStandard\nProduct-Led\nEducation\n\n\n1\nSMB Self-Serve\n1048.821515\n6.601403\n0.170701\n34.824996\nWest\nStandard\nProduct-Led\nEducation\n\n\n2\nSMB Self-Serve\n1066.571821\n6.363722\n1.646237\n39.619883\nMidwest\nBasic\nProduct-Led\nServices\n\n\n3\nSMB Self-Serve\n1027.093831\n1.000000\n1.295731\n31.204233\nSouth\nBasic\nWeb\nServices\n\n\n4\nSMB Self-Serve\n682.406581\n5.758805\n0.000000\n51.907617\nSouth\nBasic\nProduct-Led\nServices\n\n\n\n\n\n\n\n\n\nBuild the preprocessing pipeline\n\n\nShow code\ncrm_num = [\"annual_spend\", \"tenure_months\", \"support_tickets\", \"engagement_score\"]\ncrm_cat = [\"region\", \"plan_type\", \"acquisition_channel\", \"industry\"]\n\ncrm_preprocessor = ColumnTransformer(\n    transformers=[\n        (\n            \"num\",\n            Pipeline([\n                (\"imputer\", SimpleImputer(strategy=\"median\")),\n                (\"scaler\", StandardScaler())\n            ]),\n            crm_num,\n        ),\n        (\n            \"cat\",\n            Pipeline([\n                (\"imputer\", SimpleImputer(strategy=\"most_frequent\")),\n                (\"onehot\", OneHotEncoder(handle_unknown=\"ignore\"))\n            ]),\n            crm_cat,\n        )\n    ]\n)\n\nX_crm = crm_preprocessor.fit_transform(crm[crm_num + crm_cat])\nX_crm.shape\n\n\n(480, 24)\n\n\n\n\nChoose the number of clusters\n\n\nShow code\ncrm_metrics = evaluate_kmeans_range(X_crm, k_values=range(2, 7))\ncrm_metrics\n\n\n\n\n\n\n\n\n\nk\ninertia\nsilhouette\n\n\n\n\n0\n2\n1903.531297\n0.385367\n\n\n1\n3\n1499.085301\n0.287414\n\n\n2\n4\n1415.749400\n0.253594\n\n\n3\n5\n1333.468931\n0.198289\n\n\n4\n6\n1251.205705\n0.162080\n\n\n\n\n\n\n\n\n\nShow code\nplot_metric_curve(crm_metrics, title_prefix=\"CRM: \")\n\n\n\n\n\n\n\n\n\n\n\nFit the CRM segmentation model\n\n\nShow code\nk_crm = 3\ncrm_model = KMeans(n_clusters=k_crm, random_state=42, n_init=20)\ncrm[\"segment\"] = crm_model.fit_predict(X_crm)\ncrm.head()\n\n\n\n\n\n\n\n\n\ntrue_segment\nannual_spend\ntenure_months\nsupport_tickets\nengagement_score\nregion\nplan_type\nacquisition_channel\nindustry\nsegment\n\n\n\n\n0\nSMB Self-Serve\n501.010710\n6.564222\n1.117340\n57.705436\nSouth\nStandard\nProduct-Led\nEducation\n2\n\n\n1\nSMB Self-Serve\n1048.821515\n6.601403\n0.170701\n34.824996\nWest\nStandard\nProduct-Led\nEducation\n2\n\n\n2\nSMB Self-Serve\n1066.571821\n6.363722\n1.646237\n39.619883\nMidwest\nBasic\nProduct-Led\nServices\n2\n\n\n3\nSMB Self-Serve\n1027.093831\n1.000000\n1.295731\n31.204233\nSouth\nBasic\nWeb\nServices\n2\n\n\n4\nSMB Self-Serve\n682.406581\n5.758805\n0.000000\n51.907617\nSouth\nBasic\nProduct-Led\nServices\n2\n\n\n\n\n\n\n\n\n\nVisualize the CRM segments\n\n\nShow code\nplot_pca_segments(X_crm, crm[\"segment\"], title=\"CRM segments projected onto two principal components\")\n\n\n\n\n\n\n\n\n\n\n\nNumeric CRM profile table\n\n\nShow code\ncrm_numeric_profile = crm.groupby(\"segment\")[crm_num].mean().round(2)\ncrm_numeric_profile = add_segment_order(crm_numeric_profile, sort_col=\"annual_spend\", ascending=False)\ncrm_numeric_profile\n\n\n\n\n\n\n\n\n\nsegment_rank\nannual_spend\ntenure_months\nsupport_tickets\nengagement_score\n\n\nsegment\n\n\n\n\n\n\n\n\n\n1\n1\n28677.97\n41.13\n9.07\n81.84\n\n\n0\n2\n6462.41\n21.89\n4.12\n66.18\n\n\n2\n3\n946.80\n6.18\n1.70\n43.61\n\n\n\n\n\n\n\n\n\nCategorical CRM profile table\n\n\nShow code\ncrm_categorical_profile = top_categories_by_segment(crm, \"segment\", crm_cat)\ncrm_categorical_profile\n\n\n\n\n\n\n\n\n\nregion\nplan_type\nacquisition_channel\nindustry\n\n\nsegment\n\n\n\n\n\n\n\n\n0\nWest\nStandard\nPartner\nServices\n\n\n1\nWest\nEnterprise\nField\nFinance\n\n\n2\nMidwest\nStandard\nProduct-Led\nServices\n\n\n\n\n\n\n\n\n\nCross-tab against the latent CRM segments\n\n\nShow code\npd.crosstab(crm[\"segment\"], crm[\"true_segment\"])\n\n\n\n\n\n\n\n\ntrue_segment\nEnterprise Direct\nMidmarket Partner\nSMB Self-Serve\n\n\nsegment\n\n\n\n\n\n\n\n0\n0\n158\n0\n\n\n1\n160\n0\n0\n\n\n2\n0\n2\n160\n\n\n\n\n\n\n\n\n\nInterpretation\nA typical practical reading might be:\n\none segment is small self-serve accounts with low tenure and low spend,\none segment is midmarket partner-led accounts with moderate spend and mixed support needs,\none segment is enterprise direct accounts with high spend, longer tenure, and higher engagement."
+  },
+  {
+    "objectID": "tutorial.html#compact-comparison-across-the-three-settings",
+    "href": "tutorial.html#compact-comparison-across-the-three-settings",
+    "title": "Market Segmentation in Python: A Quarto Tutorial with Synthetic Data",
+    "section": "4. Compact comparison across the three settings",
+    "text": "4. Compact comparison across the three settings\n\n\nShow code\ncomparison = pd.DataFrame({\n    \"dataset\": [\"Survey\", \"Transaction\", \"CRM\"],\n    \"chosen_k\": [k_survey, k_txn, k_crm],\n    \"silhouette_at_k\": [\n        float(survey_metrics.loc[survey_metrics[\"k\"] == k_survey, \"silhouette\"].iloc[0]),\n        float(transaction_metrics.loc[transaction_metrics[\"k\"] == k_txn, \"silhouette\"].iloc[0]),\n        float(crm_metrics.loc[crm_metrics[\"k\"] == k_crm, \"silhouette\"].iloc[0]),\n    ]\n}).round(3)\ncomparison\n\n\n\n\n\n\n\n\n\ndataset\nchosen_k\nsilhouette_at_k\n\n\n\n\n0\nSurvey\n3\n0.491\n\n\n1\nTransaction\n3\n0.632\n\n\n2\nCRM\n3\n0.287"
+  },
+  {
+    "objectID": "tutorial.html#recommended-adaptation-patterns",
+    "href": "tutorial.html#recommended-adaptation-patterns",
+    "title": "Market Segmentation in Python: A Quarto Tutorial with Synthetic Data",
+    "section": "5. Recommended adaptation patterns",
+    "text": "5. Recommended adaptation patterns\n\nFor real survey data\nReplace the synthetic survey with your real table and:\n\nmap Likert items to numeric scores,\nconsider one-hot encoding for purely nominal variables,\ncompare KMeans with AgglomerativeClustering.\n\n\n\nFor real transaction data\nBuild a customer-feature table first:\n\nrecency,\npurchase frequency,\nspend,\naverage order value,\ncategory breadth,\ndiscount share,\nreturn rate,\ntenure.\n\nThen:\n\nlog-transform highly skewed variables,\nstandardize,\ntest multiple values of k,\nprofile the segments in business language.\n\n\n\nFor real CRM data\nUse a mixed-data preprocessing pipeline:\n\nimpute missing values,\nscale numerics,\none-hot encode categoricals,\ncluster transformed features,\nsummarize both means and top categories by segment."
+  },
+  {
+    "objectID": "tutorial.html#optional-hierarchical-clustering-for-survey-data",
+    "href": "tutorial.html#optional-hierarchical-clustering-for-survey-data",
+    "title": "Market Segmentation in Python: A Quarto Tutorial with Synthetic Data",
+    "section": "6. Optional: hierarchical clustering for survey data",
+    "text": "6. Optional: hierarchical clustering for survey data\nIf you want a non-K-means alternative for the survey case, hierarchical clustering is often useful.\n\n\nShow code\nsurvey_hier = AgglomerativeClustering(n_clusters=3)\nsurvey[\"segment_hier\"] = survey_hier.fit_predict(X_survey)\n\npd.crosstab(survey[\"segment_hier\"], survey[\"true_segment\"])\n\n\n\n\n\n\n\n\ntrue_segment\nQuality Loyalists\nTrend Explorers\nValue Seekers\n\n\nsegment_hier\n\n\n\n\n\n\n\n0\n0\n0\n120\n\n\n1\n0\n120\n0\n\n\n2\n120\n0\n0"
+  },
+  {
+    "objectID": "tutorial.html#what-to-watch-for-in-production-work",
+    "href": "tutorial.html#what-to-watch-for-in-production-work",
+    "title": "Market Segmentation in Python: A Quarto Tutorial with Synthetic Data",
+    "section": "7. What to watch for in production work",
+    "text": "7. What to watch for in production work\nA segmentation that looks good in a notebook can still fail in practice if:\n\nthe features are built over inconsistent time windows,\nthe segments are not actionable,\nthe cluster solution is unstable over time,\none-hot encoded rare categories dominate the geometry,\noutliers are left untreated,\nstakeholders cannot name or use the resulting segments.\n\nGood segmentation is not just a model-fitting exercise. It is a combination of:\n\nsound feature engineering,\nappropriate preprocessing,\nsensible clustering,\ncareful profiling,\nbusiness interpretation."
+  },
+  {
+    "objectID": "tutorial.html#session-info",
+    "href": "tutorial.html#session-info",
+    "title": "Market Segmentation in Python: A Quarto Tutorial with Synthetic Data",
+    "section": "8. Session info",
+    "text": "8. Session info\n\n\nShow code\nimport sys\nimport sklearn\n\nprint(\"Python:\", sys.version.split()[0])\nprint(\"pandas:\", pd.__version__)\nprint(\"numpy:\", np.__version__)\nprint(\"scikit-learn:\", sklearn.__version__)\n\n\nPython: 3.14.2\npandas: 3.0.0\nnumpy: 2.4.1\nscikit-learn: 1.8.0"
+  },
+  {
+    "objectID": "tutorial.html#rendering-notes",
+    "href": "tutorial.html#rendering-notes",
+    "title": "Market Segmentation in Python: A Quarto Tutorial with Synthetic Data",
+    "section": "9. Rendering notes",
+    "text": "9. Rendering notes\nRender locally with Quarto using your usual workflow, for example:\nquarto render market_segmentation_pyodide_tutorial.qmd\nFor browser-side Python deployment, keep the code modest and use a Pyodide-compatible publishing workflow."
+  },
+  {
+    "objectID": "hierarchical.html",
+    "href": "hierarchical.html",
+    "title": "6. Optional: Hierarchical Clustering",
+    "section": "",
+    "text": "If you want a non-K-means alternative for the survey case, hierarchical clustering is often useful. AgglomerativeClustering does not require specifying a random state and can produce more stable solutions on small datasets.\n\n\n\n\n\n\n\n\ntrue_segment\nQuality Loyalists\nTrend Explorers\nValue Seekers\n\n\nsegment_hier\n\n\n\n\n\n\n\n0\n0\n0\n120\n\n\n1\n0\n120\n0\n\n\n2\n120\n0\n0\n\n\n\n\n\n\n\nCompare the cross-tab here with the one from the Survey page to see how closely the two methods agree on the latent segment recovery.",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "6. Hierarchical Clustering"
+    ]
+  },
+  {
+    "objectID": "survey.html",
+    "href": "survey.html",
+    "title": "1. Survey Segmentation",
+    "section": "",
+    "text": "Survey segmentation is common when you have attitudinal or preference variables such as:\n\nprice sensitivity,\nquality emphasis,\nenvironmental concern,\nnovelty seeking,\nchannel preference.\n\nIn practice, survey segmentation often uses ordinal scales or one-hot encoded categories. To keep this tutorial Pyodide-friendly, we will build a synthetic survey with Likert-like numeric items and use K-means after standardization.",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "1. Survey"
+    ]
+  },
+  {
+    "objectID": "survey.html#framing",
+    "href": "survey.html#framing",
+    "title": "1. Survey Segmentation",
+    "section": "",
+    "text": "Survey segmentation is common when you have attitudinal or preference variables such as:\n\nprice sensitivity,\nquality emphasis,\nenvironmental concern,\nnovelty seeking,\nchannel preference.\n\nIn practice, survey segmentation often uses ordinal scales or one-hot encoded categories. To keep this tutorial Pyodide-friendly, we will build a synthetic survey with Likert-like numeric items and use K-means after standardization.",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "1. Survey"
+    ]
+  },
+  {
+    "objectID": "survey.html#generate-synthetic-survey-data",
+    "href": "survey.html#generate-synthetic-survey-data",
+    "title": "1. Survey Segmentation",
+    "section": "Generate synthetic survey data",
+    "text": "Generate synthetic survey data\n\n\n\n\n\n\n\n\n\ntrue_segment\nprice_importance\nquality_importance\ninnovation_interest\neco_concern\nbrand_loyalty\nsocial_media_engagement\n\n\n\n\n0\nValue Seekers\n5.0\n2.0\n2.0\n3.0\n2.0\n3.0\n\n\n1\nValue Seekers\n4.0\n2.0\n3.0\n3.0\n2.0\n3.0\n\n\n2\nValue Seekers\n5.0\n3.0\n1.0\n3.0\n1.0\n3.0\n\n\n3\nValue Seekers\n5.0\n2.0\n2.0\n3.0\n3.0\n3.0\n\n\n4\nValue Seekers\n4.0\n2.0\n2.0\n3.0\n2.0\n3.0",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "1. Survey"
+    ]
+  },
+  {
+    "objectID": "survey.html#inspect-the-synthetic-survey",
+    "href": "survey.html#inspect-the-synthetic-survey",
+    "title": "1. Survey Segmentation",
+    "section": "Inspect the synthetic survey",
+    "text": "Inspect the synthetic survey\n\n\n\n\n\n\n\n\n\nprice_importance\nquality_importance\ninnovation_interest\neco_concern\nbrand_loyalty\nsocial_media_engagement\n\n\ntrue_segment\n\n\n\n\n\n\n\n\n\n\nQuality Loyalists\n1.99\n4.66\n2.97\n3.96\n4.62\n2.08\n\n\nTrend Explorers\n3.01\n3.76\n4.86\n3.74\n3.00\n4.72\n\n\nValue Seekers\n4.58\n2.27\n2.41\n2.98\n2.13\n2.68",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "1. Survey"
+    ]
+  },
+  {
+    "objectID": "survey.html#standardize-and-choose-the-number-of-clusters",
+    "href": "survey.html#standardize-and-choose-the-number-of-clusters",
+    "title": "1. Survey Segmentation",
+    "section": "Standardize and choose the number of clusters",
+    "text": "Standardize and choose the number of clusters\n\n\n\n\n\n\n\n\n\nk\ninertia\nsilhouette\n\n\n\n\n0\n2\n1275.993415\n0.396234\n\n\n1\n3\n676.144353\n0.491191\n\n\n2\n4\n606.215749\n0.419992\n\n\n3\n5\n543.666777\n0.351835\n\n\n4\n6\n501.085845\n0.275706",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "1. Survey"
+    ]
+  },
+  {
+    "objectID": "survey.html#fit-the-survey-segmentation-model",
+    "href": "survey.html#fit-the-survey-segmentation-model",
+    "title": "1. Survey Segmentation",
+    "section": "Fit the survey segmentation model",
+    "text": "Fit the survey segmentation model\n\n\n\n\n\n\n\n\n\ntrue_segment\nsegment\nprice_importance\nquality_importance\ninnovation_interest\neco_concern\nbrand_loyalty\nsocial_media_engagement\n\n\n\n\n0\nValue Seekers\n2\n5.0\n2.0\n2.0\n3.0\n2.0\n3.0\n\n\n1\nValue Seekers\n2\n4.0\n2.0\n3.0\n3.0\n2.0\n3.0\n\n\n2\nValue Seekers\n2\n5.0\n3.0\n1.0\n3.0\n1.0\n3.0\n\n\n3\nValue Seekers\n2\n5.0\n2.0\n2.0\n3.0\n3.0\n3.0\n\n\n4\nValue Seekers\n2\n4.0\n2.0\n2.0\n3.0\n2.0\n3.0",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "1. Survey"
+    ]
+  },
+  {
+    "objectID": "survey.html#visualize-the-survey-segments",
+    "href": "survey.html#visualize-the-survey-segments",
+    "title": "1. Survey Segmentation",
+    "section": "Visualize the survey segments",
+    "text": "Visualize the survey segments",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "1. Survey"
+    ]
+  },
+  {
+    "objectID": "survey.html#segment-profiles-for-the-survey",
+    "href": "survey.html#segment-profiles-for-the-survey",
+    "title": "1. Survey Segmentation",
+    "section": "Segment profiles for the survey",
+    "text": "Segment profiles for the survey\n\n\n\n\n\n\n\n\n\nsegment_rank\nprice_importance\nquality_importance\ninnovation_interest\neco_concern\nbrand_loyalty\nsocial_media_engagement\n\n\nsegment\n\n\n\n\n\n\n\n\n\n\n\n2\n1\n4.58\n2.27\n2.41\n2.98\n2.13\n2.68\n\n\n1\n2\n3.01\n3.76\n4.86\n3.74\n3.00\n4.72\n\n\n0\n3\n1.99\n4.66\n2.97\n3.96\n4.62\n2.08",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "1. Survey"
+    ]
+  },
+  {
+    "objectID": "survey.html#cross-tab-against-the-known-latent-segments",
+    "href": "survey.html#cross-tab-against-the-known-latent-segments",
+    "title": "1. Survey Segmentation",
+    "section": "Cross-tab against the known latent segments",
+    "text": "Cross-tab against the known latent segments\n\n\n\n\n\n\n\n\ntrue_segment\nQuality Loyalists\nTrend Explorers\nValue Seekers\n\n\nsegment\n\n\n\n\n\n\n\n0\n120\n0\n0\n\n\n1\n0\n120\n0\n\n\n2\n0\n0\n120",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "1. Survey"
+    ]
+  },
+  {
+    "objectID": "survey.html#interpretation",
+    "href": "survey.html#interpretation",
+    "title": "1. Survey Segmentation",
+    "section": "Interpretation",
+    "text": "Interpretation\nA typical interpretation here would be:\n\nthe segment with high price_importance and lower brand_loyalty is a value-oriented segment,\nthe segment with high quality_importance and brand_loyalty is a premium/loyal segment,\nthe segment with high innovation_interest and social_media_engagement is a trend-seeking segment.",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "1. Survey"
+    ]
+  },
+  {
+    "objectID": "crm.html",
+    "href": "crm.html",
+    "title": "3. CRM Segmentation",
+    "section": "",
+    "text": "CRM and account-level segmentation often combines:\n\nnumeric variables such as tenure, spend, and support load,\ncategorical variables such as region, plan type, channel, and industry.\n\nA mixed-type workflow can be handled cleanly with a ColumnTransformer that standardizes numeric columns and one-hot encodes categorical columns, followed by clustering.",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "3. CRM"
+    ]
+  },
+  {
+    "objectID": "crm.html#framing",
+    "href": "crm.html#framing",
+    "title": "3. CRM Segmentation",
+    "section": "",
+    "text": "CRM and account-level segmentation often combines:\n\nnumeric variables such as tenure, spend, and support load,\ncategorical variables such as region, plan type, channel, and industry.\n\nA mixed-type workflow can be handled cleanly with a ColumnTransformer that standardizes numeric columns and one-hot encodes categorical columns, followed by clustering.",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "3. CRM"
+    ]
+  },
+  {
+    "objectID": "crm.html#generate-synthetic-crm-data",
+    "href": "crm.html#generate-synthetic-crm-data",
+    "title": "3. CRM Segmentation",
+    "section": "Generate synthetic CRM data",
+    "text": "Generate synthetic CRM data\n\n\n\n\n\n\n\n\n\ntrue_segment\nannual_spend\ntenure_months\nsupport_tickets\nengagement_score\nregion\nplan_type\nacquisition_channel\nindustry\n\n\n\n\n0\nSMB Self-Serve\n976.179270\n6.669239\n3.116874\n35.353740\nMidwest\nBasic\nProduct-Led\nEducation\n\n\n1\nSMB Self-Serve\n640.003973\n10.299644\n1.631027\n45.605917\nWest\nStandard\nProduct-Led\nEducation\n\n\n2\nSMB Self-Serve\n1087.612799\n6.274561\n0.497656\n28.093146\nMidwest\nBasic\nWeb\nServices\n\n\n3\nSMB Self-Serve\n1135.141179\n7.742331\n1.390273\n56.387055\nMidwest\nStandard\nWeb\nRetail\n\n\n4\nSMB Self-Serve\n412.241203\n5.829650\n1.464389\n40.559723\nWest\nBasic\nWeb\nEducation",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "3. CRM"
+    ]
+  },
+  {
+    "objectID": "crm.html#build-the-preprocessing-pipeline",
+    "href": "crm.html#build-the-preprocessing-pipeline",
+    "title": "3. CRM Segmentation",
+    "section": "Build the preprocessing pipeline",
+    "text": "Build the preprocessing pipeline\n\n\n(480, 24)",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "3. CRM"
+    ]
+  },
+  {
+    "objectID": "crm.html#choose-the-number-of-clusters",
+    "href": "crm.html#choose-the-number-of-clusters",
+    "title": "3. CRM Segmentation",
+    "section": "Choose the number of clusters",
+    "text": "Choose the number of clusters\n\n\n\n\n\n\n\n\n\nk\ninertia\nsilhouette\n\n\n\n\n0\n2\n1959.879114\n0.372738\n\n\n1\n3\n1510.688695\n0.294478\n\n\n2\n4\n1426.698136\n0.236934\n\n\n3\n5\n1344.757862\n0.184595\n\n\n4\n6\n1266.447916\n0.159137",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "3. CRM"
+    ]
+  },
+  {
+    "objectID": "crm.html#fit-the-crm-segmentation-model",
+    "href": "crm.html#fit-the-crm-segmentation-model",
+    "title": "3. CRM Segmentation",
+    "section": "Fit the CRM segmentation model",
+    "text": "Fit the CRM segmentation model\n\n\n\n\n\n\n\n\n\ntrue_segment\nannual_spend\ntenure_months\nsupport_tickets\nengagement_score\nregion\nplan_type\nacquisition_channel\nindustry\nsegment\n\n\n\n\n0\nSMB Self-Serve\n976.179270\n6.669239\n3.116874\n35.353740\nMidwest\nBasic\nProduct-Led\nEducation\n2\n\n\n1\nSMB Self-Serve\n640.003973\n10.299644\n1.631027\n45.605917\nWest\nStandard\nProduct-Led\nEducation\n2\n\n\n2\nSMB Self-Serve\n1087.612799\n6.274561\n0.497656\n28.093146\nMidwest\nBasic\nWeb\nServices\n2\n\n\n3\nSMB Self-Serve\n1135.141179\n7.742331\n1.390273\n56.387055\nMidwest\nStandard\nWeb\nRetail\n2\n\n\n4\nSMB Self-Serve\n412.241203\n5.829650\n1.464389\n40.559723\nWest\nBasic\nWeb\nEducation\n2",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "3. CRM"
+    ]
+  },
+  {
+    "objectID": "crm.html#visualize-the-crm-segments",
+    "href": "crm.html#visualize-the-crm-segments",
+    "title": "3. CRM Segmentation",
+    "section": "Visualize the CRM segments",
+    "text": "Visualize the CRM segments",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "3. CRM"
+    ]
+  },
+  {
+    "objectID": "crm.html#numeric-crm-profile-table",
+    "href": "crm.html#numeric-crm-profile-table",
+    "title": "3. CRM Segmentation",
+    "section": "Numeric CRM profile table",
+    "text": "Numeric CRM profile table\n\n\n\n\n\n\n\n\n\nsegment_rank\nannual_spend\ntenure_months\nsupport_tickets\nengagement_score\n\n\nsegment\n\n\n\n\n\n\n\n\n\n1\n1\n28037.33\n39.39\n8.93\n80.84\n\n\n0\n2\n6529.13\n21.82\n4.14\n65.36\n\n\n2\n3\n884.69\n5.81\n1.58\n40.48",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "3. CRM"
+    ]
+  },
+  {
+    "objectID": "crm.html#categorical-crm-profile-table",
+    "href": "crm.html#categorical-crm-profile-table",
+    "title": "3. CRM Segmentation",
+    "section": "Categorical CRM profile table",
+    "text": "Categorical CRM profile table\n\n\n\n\n\n\n\n\n\nregion\nplan_type\nacquisition_channel\nindustry\n\n\nsegment\n\n\n\n\n\n\n\n\n0\nWest\nStandard\nSales\nHealthcare\n\n\n1\nNortheast\nPremium\nField\nFinance\n\n\n2\nWest\nBasic\nProduct-Led\nEducation",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "3. CRM"
+    ]
+  },
+  {
+    "objectID": "crm.html#cross-tab-against-the-latent-crm-segments",
+    "href": "crm.html#cross-tab-against-the-latent-crm-segments",
+    "title": "3. CRM Segmentation",
+    "section": "Cross-tab against the latent CRM segments",
+    "text": "Cross-tab against the latent CRM segments\n\n\n\n\n\n\n\n\ntrue_segment\nEnterprise Direct\nMidmarket Partner\nSMB Self-Serve\n\n\nsegment\n\n\n\n\n\n\n\n0\n0\n160\n0\n\n\n1\n160\n0\n0\n\n\n2\n0\n0\n160",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "3. CRM"
+    ]
+  },
+  {
+    "objectID": "crm.html#interpretation",
+    "href": "crm.html#interpretation",
+    "title": "3. CRM Segmentation",
+    "section": "Interpretation",
+    "text": "Interpretation\nA typical practical reading might be:\n\none segment is small self-serve accounts with low tenure and low spend,\none segment is midmarket partner-led accounts with moderate spend and mixed support needs,\none segment is enterprise direct accounts with high spend, longer tenure, and higher engagement.",
+    "crumbs": [
+      "Home",
+      "Examples",
+      "3. CRM"
+    ]
+  },
+  {
+    "objectID": "warnings.html",
+    "href": "warnings.html",
+    "title": "Warnings",
+    "section": "",
+    "text": "A segmentation that looks good in a notebook can still fail in practice if:\n\nthe features are built over inconsistent time windows,\nthe segments are not actionable,\nthe cluster solution is unstable over time,\none-hot encoded rare categories dominate the geometry,\noutliers are left untreated,\nstakeholders cannot name or use the resulting segments.\n\nGood segmentation is not just a model-fitting exercise. It is a combination of:\n\nsound feature engineering,\nappropriate preprocessing,\nsensible clustering,\ncareful profiling,\nbusiness interpretation.",
+    "crumbs": [
+      "Home",
+      "Warnings"
+    ]
+  },
+  {
+    "objectID": "shinylive_demo.html#purpose",
+    "href": "shinylive_demo.html#purpose",
+    "title": "Interactive Demo Pattern",
+    "section": "Purpose",
+    "text": "Purpose\nThis page is a starter pattern for a browser-side interactive segmentation demo that you can adapt after adding the optional Shinylive extension.\nThe goal is not to reproduce the full tutorial here, but to provide a small interactive page suitable for GitHub Pages."
+  },
+  {
+    "objectID": "shinylive_demo.html#suggested-setup-command",
+    "href": "shinylive_demo.html#suggested-setup-command",
+    "title": "Interactive Demo Pattern",
+    "section": "Suggested setup command",
+    "text": "Suggested setup command\nquarto add quarto-ext/shinylive"
+  },
+  {
+    "objectID": "shinylive_demo.html#minimal-example-structure",
+    "href": "shinylive_demo.html#minimal-example-structure",
+    "title": "Interactive Demo Pattern",
+    "section": "Minimal example structure",
+    "text": "Minimal example structure\nOnce the extension is installed, replace this placeholder section with your preferred Shinylive block from the extension’s current documentation and keep the app intentionally small.\nA good first interactive exercise is:\n\nslider for sample size,\nslider for number of clusters,\nselect box for data type,\nreactive scatterplot of PCA coordinates."
+  },
+  {
+    "objectID": "shinylive_demo.html#why-this-page-is-separate",
+    "href": "shinylive_demo.html#why-this-page-is-separate",
+    "title": "Interactive Demo Pattern",
+    "section": "Why this page is separate",
+    "text": "Why this page is separate\nKeeping the interactive demo separate from the main tutorial helps in two ways:\n\nthe tutorial remains easy to render and debug as a normal Quarto document;\nthe browser-side demo can stay intentionally small so it performs well under Pyodide/WebAssembly constraints.\n\nThe Shinylive extension is specifically meant for embedding Shiny for Python apps that run entirely in the browser. citeturn231216view0"
+  },
+  {
+    "objectID": "shinylive_demo.html#practical-note",
+    "href": "shinylive_demo.html#practical-note",
+    "title": "Interactive Demo Pattern",
+    "section": "Practical note",
+    "text": "Practical note\nNot every Python package works equally well in WebAssembly/browser runtimes, so smaller demos with mainstream scientific Python packages are the safest fit. The Shinylive extension documentation explicitly notes that not all Python packages can run in WebAssembly. citeturn231216view0"
+  }
+]

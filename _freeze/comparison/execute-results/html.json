@@ -1,0 +1,16 @@
+{
+  "hash": "80f214b4f38879ecfc64681fe6ffe9b4",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"4. Compact Comparison\"\nsubtitle: \"Silhouette Scores Across All Three Settings\"\n---\n\n\n\nThis table shows the chosen k and the corresponding silhouette score for each of the three segmentation settings.\n\n::: {#cell-final-comparison .cell execution_count=2}\n\n::: {#final-comparison .cell-output .cell-output-display execution_count=2}\n```{=html}\n<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>dataset</th>\n      <th>chosen_k</th>\n      <th>silhouette_at_k</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>Survey</td>\n      <td>3</td>\n      <td>0.491</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>Transaction</td>\n      <td>3</td>\n      <td>0.632</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>CRM</td>\n      <td>3</td>\n      <td>0.287</td>\n    </tr>\n  </tbody>\n</table>\n</div>\n```\n:::\n:::\n\n\nAll three settings find a reasonably clean three-cluster solution with synthetic data. In practice, silhouette scores on real data are often lower, and the choice of k requires more judgment than the elbow and silhouette plots alone can provide.\n\n",
+    "supporting": [
+      "comparison_files"
+    ],
+    "filters": [],
+    "includes": {
+      "include-in-header": [
+        "<script src=\"https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js\" integrity=\"sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx\" crossorigin=\"anonymous\"></script>\n<script src=\"https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js\" integrity=\"sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2\" crossorigin=\"anonymous\" data-relocate-top=\"true\"></script>\n<script type=\"application/javascript\">define('jquery', [],function() {return window.jQuery;})</script>\n"
+      ]
+    }
+  }
+}

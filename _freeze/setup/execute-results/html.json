@@ -1,0 +1,12 @@
+{
+  "hash": "6e43daa130754c6d6bb8e76aa9f47516",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Setup\"\nsubtitle: \"Imports and Helper Functions\"\n---\n\n## Imports\n\nAll pages in this tutorial rely on the following standard packages. These are chosen for Pyodide compatibility.\n\n\n\n## Helper functions\n\nFive shared utilities are used throughout the tutorial pages.\n\n\n\n**`evaluate_kmeans_range(X, k_values)`** — fits K-means for each value of k and returns a DataFrame of inertia and silhouette scores.\n\n**`add_segment_order(summary_df, sort_col)`** — inserts a `segment_rank` column sorted by a chosen column, useful for profiling tables.\n\n**`plot_metric_curve(df_metrics)`** — plots inertia and silhouette side by side to help choose k.\n\n**`plot_pca_segments(X, labels)`** — projects the feature matrix to two principal components and plots colored by cluster label.\n\n**`top_categories_by_segment(df, segment_col, cat_cols)`** — returns the modal category value for each categorical column by segment.\n\n## Session info\n\n::: {#session-info .cell execution_count=3}\n\n::: {.cell-output .cell-output-stdout}\n```\nPython: 3.14.2\npandas: 3.0.0\nnumpy: 2.4.1\nscikit-learn: 1.8.0\n```\n:::\n:::\n\n\n",
+    "supporting": [
+      "setup_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}
