@@ -1,0 +1,21 @@
+---
+title: "Warnings"
+subtitle: "Common Failure Modes in Production Segmentation"
+---
+
+A segmentation that looks good in a notebook can still fail in practice if:
+
+- the features are built over inconsistent time windows,
+- the segments are not actionable,
+- the cluster solution is unstable over time,
+- one-hot encoded rare categories dominate the geometry,
+- outliers are left untreated,
+- stakeholders cannot name or use the resulting segments.
+
+Good segmentation is not just a model-fitting exercise. It is a combination of:
+
+- sound feature engineering,
+- appropriate preprocessing,
+- sensible clustering,
+- careful profiling,
+- business interpretation.

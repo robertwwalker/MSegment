@@ -1,0 +1,206 @@
+---
+title: "2. Transaction Segmentation"
+subtitle: "RFM-Style Behavioral Feature Segmentation"
+---
+
+```{python}
+#| label: setup
+#| echo: false
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.metrics import silhouette_score
+from sklearn.preprocessing import StandardScaler
+
+RNG = np.random.default_rng(42)
+pd.set_option("display.max_columns", 100)
+
+def evaluate_kmeans_range(X, k_values, random_state=42, n_init=20):
+    rows = []
+    for k in k_values:
+        model = KMeans(n_clusters=k, random_state=random_state, n_init=n_init)
+        labels = model.fit_predict(X)
+        rows.append({
+            "k": k,
+            "inertia": model.inertia_,
+            "silhouette": silhouette_score(X, labels)
+        })
+    return pd.DataFrame(rows)
+
+def add_segment_order(summary_df, sort_col, ascending=True):
+    ordered = summary_df.sort_values(sort_col, ascending=ascending).copy()
+    ordered.insert(0, "segment_rank", range(1, len(ordered) + 1))
+    return ordered
+
+def plot_metric_curve(df_metrics, x_col="k", y_cols=("inertia", "silhouette"), title_prefix=""):
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+    axes[0].plot(df_metrics[x_col], df_metrics[y_cols[0]], marker="o")
+    axes[0].set_title(f"{title_prefix}Inertia by k")
+    axes[0].set_xlabel("k")
+    axes[0].set_ylabel("Inertia")
+    axes[1].plot(df_metrics[x_col], df_metrics[y_cols[1]], marker="o")
+    axes[1].set_title(f"{title_prefix}Silhouette by k")
+    axes[1].set_xlabel("k")
+    axes[1].set_ylabel("Silhouette")
+    plt.tight_layout()
+    plt.show()
+
+def plot_pca_segments(X, labels, title="PCA view of segments"):
+    if hasattr(X, "toarray"):
+        X = X.toarray()
+    pca = PCA(n_components=2, random_state=42)
+    coords = pca.fit_transform(X)
+    plt.figure(figsize=(7, 5))
+    scatter = plt.scatter(coords[:, 0], coords[:, 1], c=labels)
+    plt.title(title)
+    plt.xlabel("PC1")
+    plt.ylabel("PC2")
+    plt.show()
+```
+
+## Framing
+
+Transaction segmentation usually starts with customer-level feature engineering rather than raw order lines. Common features include:
+
+- recency,
+- purchase frequency,
+- monetary value,
+- average order value,
+- discount reliance,
+- category breadth.
+
+This section generates synthetic **RFM-style** data plus two additional behavioral variables.
+
+## Generate synthetic transaction features
+
+```{python}
+#| label: txn-generate
+n_txn = 450
+latent = np.repeat(["Dormant Discount", "Steady Midvalue", "High Value Loyal"], n_txn // 3)
+
+transaction = pd.DataFrame({
+    "true_segment": latent,
+    "recency_days": np.concatenate([
+        RNG.normal(220, 45, n_txn // 3),
+        RNG.normal(55, 18, n_txn // 3),
+        RNG.normal(14, 6, n_txn // 3),
+    ]),
+    "purchase_frequency": np.concatenate([
+        RNG.normal(2.5, 1.0, n_txn // 3),
+        RNG.normal(10.0, 2.0, n_txn // 3),
+        RNG.normal(24.0, 4.0, n_txn // 3),
+    ]),
+    "monetary_value": np.concatenate([
+        RNG.normal(120, 35, n_txn // 3),
+        RNG.normal(650, 120, n_txn // 3),
+        RNG.normal(2300, 350, n_txn // 3),
+    ]),
+    "discount_share": np.concatenate([
+        RNG.normal(0.72, 0.10, n_txn // 3),
+        RNG.normal(0.28, 0.08, n_txn // 3),
+        RNG.normal(0.08, 0.04, n_txn // 3),
+    ]),
+    "category_breadth": np.concatenate([
+        RNG.normal(1.8, 0.7, n_txn // 3),
+        RNG.normal(3.6, 0.9, n_txn // 3),
+        RNG.normal(5.8, 1.1, n_txn // 3),
+    ]),
+    "avg_order_value": np.concatenate([
+        RNG.normal(48, 10, n_txn // 3),
+        RNG.normal(78, 14, n_txn // 3),
+        RNG.normal(160, 25, n_txn // 3),
+    ])
+})
+
+transaction["recency_days"] = transaction["recency_days"].clip(lower=1)
+transaction["purchase_frequency"] = transaction["purchase_frequency"].clip(lower=1)
+transaction["monetary_value"] = transaction["monetary_value"].clip(lower=10)
+transaction["discount_share"] = transaction["discount_share"].clip(0, 1)
+transaction["category_breadth"] = transaction["category_breadth"].clip(lower=1)
+transaction["avg_order_value"] = transaction["avg_order_value"].clip(lower=5)
+
+transaction.head()
+```
+
+## Create transformed modeling features
+
+```{python}
+#| label: txn-transform
+transaction["monetary_log"] = np.log1p(transaction["monetary_value"])
+transaction["avg_order_log"] = np.log1p(transaction["avg_order_value"])
+transaction["recency_log"] = np.log1p(transaction["recency_days"])
+
+transaction_features = [
+    "recency_log", "purchase_frequency", "monetary_log",
+    "discount_share", "category_breadth", "avg_order_log"
+]
+
+X_txn = StandardScaler().fit_transform(transaction[transaction_features])
+transaction[transaction_features].describe().round(2)
+```
+
+## Choose the number of clusters
+
+```{python}
+#| label: txn-eval
+transaction_metrics = evaluate_kmeans_range(X_txn, k_values=range(2, 7))
+transaction_metrics
+```
+
+```{python}
+#| label: txn-metric-plot
+plot_metric_curve(transaction_metrics, title_prefix="Transaction: ")
+```
+
+## Fit the transaction segmentation model
+
+```{python}
+#| label: txn-fit
+k_txn = 3
+transaction_model = KMeans(n_clusters=k_txn, random_state=42, n_init=20)
+transaction["segment"] = transaction_model.fit_predict(X_txn)
+transaction[["true_segment", "segment"] + transaction_features].head()
+```
+
+## Visualize the transaction segments
+
+```{python}
+#| label: txn-pca
+plot_pca_segments(X_txn, transaction["segment"], title="Transaction segments projected onto two principal components")
+```
+
+## Profile the transaction segments
+
+```{python}
+#| label: txn-profile
+transaction_profile_cols = [
+    "recency_days", "purchase_frequency", "monetary_value",
+    "discount_share", "category_breadth", "avg_order_value"
+]
+
+transaction_profile = (
+    transaction.groupby("segment")[transaction_profile_cols]
+    .mean()
+    .round(2)
+)
+transaction_profile = add_segment_order(transaction_profile, sort_col="monetary_value", ascending=False)
+transaction_profile
+```
+
+## Cross-tab against the latent transaction segments
+
+```{python}
+#| label: txn-crosstab
+pd.crosstab(transaction["segment"], transaction["true_segment"])
+```
+
+## Interpretation
+
+A typical business reading might be:
+
+- high-recency, low-frequency, high-discount customers are **at-risk bargain buyers**,
+- medium-value and medium-frequency customers are **core mainstream buyers**,
+- low-recency, high-frequency, high-spend customers are **premium loyalists**.

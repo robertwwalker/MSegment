@@ -16,6 +16,29 @@ website:
     right:
       - icon: github
         href: "https://github.com/robertwwalker/MSegment"
+  sidebar:
+    style: "docked"
+    contents:
+      - text: "Home"
+        href: index.qmd
+      - text: "Setup"
+        href: setup.qmd
+      - section: "Examples"
+        contents:
+          - text: "1. Survey"
+            href: survey.qmd
+          - text: "2. Transaction"
+            href: transaction.qmd
+          - text: "3. CRM"
+            href: crm.qmd
+          - text: "4. Comparison"
+            href: comparison.qmd
+          - text: "5. Adaptation Patterns"
+            href: adaptation.qmd
+          - text: "6. Hierarchical Clustering"
+            href: hierarchical.qmd
+      - text: "Warnings"
+        href: warnings.qmd
   page-footer:
     left: "Built with Quarto for GitHub Pages."
 

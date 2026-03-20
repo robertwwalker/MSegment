@@ -1,0 +1,42 @@
+---
+title: "5. Recommended Adaptation Patterns"
+subtitle: "Guidance for Applying These Workflows to Real Data"
+---
+
+## For real survey data
+
+Replace the synthetic survey with your real table and:
+
+- map Likert items to numeric scores,
+- consider one-hot encoding for purely nominal variables,
+- compare `KMeans` with `AgglomerativeClustering`.
+
+## For real transaction data
+
+Build a customer-feature table first:
+
+- recency,
+- purchase frequency,
+- spend,
+- average order value,
+- category breadth,
+- discount share,
+- return rate,
+- tenure.
+
+Then:
+
+- log-transform highly skewed variables,
+- standardize,
+- test multiple values of `k`,
+- profile the segments in business language.
+
+## For real CRM data
+
+Use a mixed-data preprocessing pipeline:
+
+- impute missing values,
+- scale numerics,
+- one-hot encode categoricals,
+- cluster transformed features,
+- summarize both means and top categories by segment.

@@ -1,0 +1,47 @@
+---
+title: "6. Optional: Hierarchical Clustering"
+subtitle: "An Alternative to K-means for Survey Data"
+---
+
+```{python}
+#| label: setup
+#| echo: false
+import numpy as np
+import pandas as pd
+
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.preprocessing import StandardScaler
+
+RNG = np.random.default_rng(42)
+pd.set_option("display.max_columns", 100)
+
+# Rebuild the survey data and scaled features
+n_per_segment = 120
+segments = np.repeat(["Value Seekers", "Quality Loyalists", "Trend Explorers"], n_per_segment)
+
+survey = pd.DataFrame({
+    "true_segment": segments,
+    "price_importance": np.concatenate([RNG.normal(4.6, 0.4, n_per_segment), RNG.normal(2.0, 0.5, n_per_segment), RNG.normal(3.0, 0.6, n_per_segment)]),
+    "quality_importance": np.concatenate([RNG.normal(2.3, 0.5, n_per_segment), RNG.normal(4.7, 0.4, n_per_segment), RNG.normal(3.8, 0.5, n_per_segment)]),
+    "innovation_interest": np.concatenate([RNG.normal(2.4, 0.5, n_per_segment), RNG.normal(3.0, 0.5, n_per_segment), RNG.normal(4.8, 0.3, n_per_segment)]),
+    "eco_concern": np.concatenate([RNG.normal(3.0, 0.7, n_per_segment), RNG.normal(4.0, 0.5, n_per_segment), RNG.normal(3.7, 0.6, n_per_segment)]),
+    "brand_loyalty": np.concatenate([RNG.normal(2.2, 0.6, n_per_segment), RNG.normal(4.6, 0.4, n_per_segment), RNG.normal(3.1, 0.6, n_per_segment)]),
+    "social_media_engagement": np.concatenate([RNG.normal(2.8, 0.7, n_per_segment), RNG.normal(2.2, 0.6, n_per_segment), RNG.normal(4.7, 0.4, n_per_segment)])
+})
+
+likert_cols = ["price_importance", "quality_importance", "innovation_interest", "eco_concern", "brand_loyalty", "social_media_engagement"]
+survey[likert_cols] = survey[likert_cols].clip(1, 5).round(0)
+X_survey = StandardScaler().fit_transform(survey[likert_cols])
+```
+
+If you want a non-K-means alternative for the survey case, hierarchical clustering is often useful. `AgglomerativeClustering` does not require specifying a random state and can produce more stable solutions on small datasets.
+
+```{python}
+#| label: survey-hierarchical
+survey_hier = AgglomerativeClustering(n_clusters=3)
+survey["segment_hier"] = survey_hier.fit_predict(X_survey)
+
+pd.crosstab(survey["segment_hier"], survey["true_segment"])
+```
+
+Compare the cross-tab here with the one from the [Survey page](survey.qmd) to see how closely the two methods agree on the latent segment recovery.

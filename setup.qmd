@@ -1,0 +1,119 @@
+---
+title: "Setup"
+subtitle: "Imports and Helper Functions"
+---
+
+## Imports
+
+All pages in this tutorial rely on the following standard packages. These are chosen for Pyodide compatibility.
+
+```{python}
+#| label: setup
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.base import clone
+from sklearn.compose import ColumnTransformer
+from sklearn.cluster import KMeans, AgglomerativeClustering
+from sklearn.decomposition import PCA
+from sklearn.impute import SimpleImputer
+from sklearn.metrics import silhouette_score
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+RNG = np.random.default_rng(42)
+pd.set_option("display.max_columns", 100)
+```
+
+## Helper functions
+
+Five shared utilities are used throughout the tutorial pages.
+
+```{python}
+#| label: helper-functions
+
+def evaluate_kmeans_range(X, k_values, random_state=42, n_init=20):
+    rows = []
+    for k in k_values:
+        model = KMeans(n_clusters=k, random_state=random_state, n_init=n_init)
+        labels = model.fit_predict(X)
+        rows.append({
+            "k": k,
+            "inertia": model.inertia_,
+            "silhouette": silhouette_score(X, labels)
+        })
+    return pd.DataFrame(rows)
+
+
+def add_segment_order(summary_df, sort_col, ascending=True):
+    ordered = summary_df.sort_values(sort_col, ascending=ascending).copy()
+    ordered.insert(0, "segment_rank", range(1, len(ordered) + 1))
+    return ordered
+
+
+def plot_metric_curve(df_metrics, x_col="k", y_cols=("inertia", "silhouette"), title_prefix=""):
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+    axes[0].plot(df_metrics[x_col], df_metrics[y_cols[0]], marker="o")
+    axes[0].set_title(f"{title_prefix}Inertia by k")
+    axes[0].set_xlabel("k")
+    axes[0].set_ylabel("Inertia")
+
+    axes[1].plot(df_metrics[x_col], df_metrics[y_cols[1]], marker="o")
+    axes[1].set_title(f"{title_prefix}Silhouette by k")
+    axes[1].set_xlabel("k")
+    axes[1].set_ylabel("Silhouette")
+
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_pca_segments(X, labels, title="PCA view of segments"):
+    if hasattr(X, "toarray"):
+        X = X.toarray()
+    pca = PCA(n_components=2, random_state=42)
+    coords = pca.fit_transform(X)
+
+    plt.figure(figsize=(7, 5))
+    scatter = plt.scatter(coords[:, 0], coords[:, 1], c=labels)
+    plt.title(title)
+    plt.xlabel("PC1")
+    plt.ylabel("PC2")
+    plt.show()
+
+
+def top_categories_by_segment(df, segment_col, cat_cols):
+    pieces = []
+    for col in cat_cols:
+        mode_vals = (
+            df.groupby(segment_col)[col]
+            .agg(lambda s: s.mode().iloc[0] if not s.mode().empty else np.nan)
+            .rename(col)
+        )
+        pieces.append(mode_vals)
+    return pd.concat(pieces, axis=1)
+```
+
+**`evaluate_kmeans_range(X, k_values)`** — fits K-means for each value of k and returns a DataFrame of inertia and silhouette scores.
+
+**`add_segment_order(summary_df, sort_col)`** — inserts a `segment_rank` column sorted by a chosen column, useful for profiling tables.
+
+**`plot_metric_curve(df_metrics)`** — plots inertia and silhouette side by side to help choose k.
+
+**`plot_pca_segments(X, labels)`** — projects the feature matrix to two principal components and plots colored by cluster label.
+
+**`top_categories_by_segment(df, segment_col, cat_cols)`** — returns the modal category value for each categorical column by segment.
+
+## Session info
+
+```{python}
+#| label: session-info
+import sys
+import sklearn
+
+print("Python:", sys.version.split()[0])
+print("pandas:", pd.__version__)
+print("numpy:", np.__version__)
+print("scikit-learn:", sklearn.__version__)
+```
